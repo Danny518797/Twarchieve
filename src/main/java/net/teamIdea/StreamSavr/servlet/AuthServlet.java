@@ -24,15 +24,39 @@ public class AuthServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Twitter twitter = newTwitter();
+        req.getSession().setAttribute("twitter", twitter);
         try {
+            StringBuffer callbackURL = req.getRequestURL();
+            int index = callbackURL.lastIndexOf("/");
+            callbackURL.replace(index, callbackURL.length(), "").append("/callback");
+
+            RequestToken requestToken = twitter.getOAuthRequestToken(callbackURL.toString());
+            req.getSession().setAttribute("requestToken", requestToken);
+            resp.sendRedirect(requestToken.getAuthenticationURL());
+
+        } catch (TwitterException e) {
+            throw new ServletException(e);
+        }
+
+    }
+        /*Twitter twitter = newTwitter();
+        try {
+            StringBuffer callbackURL = req.getRequestURL();
+            int index = callbackURL.lastIndexOf("/");
+            callbackURL.replace(index, callbackURL.length(), "").append("/callback");
+
+            RequestToken requestToken = twitter.getOAuthRequestToken(callbackURL.toString());
+            req.getSession().setAttribute("requestToken", requestToken);
+            resp.sendRedirect(requestToken.getAuthenticationURL());
+
             RequestToken requestToken = twitter.getOAuthRequestToken();
             req.getSession().setAttribute(REQUEST_TOKEN_ATTRIBUTE, requestToken);
             req.setAttribute(AUTH_URL_ATTRIBUTE, requestToken.getAuthorizationURL());
             req.getRequestDispatcher(AUTH_FORM_VIEW).forward(req, resp);
         } catch (TwitterException e) {
             resp.sendError(e.getStatusCode(), e.getMessage());
-        }
-    }
+        }  */
+    //}
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
