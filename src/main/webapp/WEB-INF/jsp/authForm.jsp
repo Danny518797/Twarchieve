@@ -3,7 +3,7 @@
 
 <layout:default title="Jittr Auth Request" >
     <jsp:attribute name="content">
-        <p>To use Jittr, you must authorize the application access your Twitter account. It's Easy as 1, 2, 3:</p>
+        <p>To use StreamSavr, you must authorize the application access your Twitter account. It's Easy as 1, 2, 3:</p>
 
         <ol>
             <li>Click <a href="<c:out value="${authUrl}"/>" target="_blank">here</a> to log in to Twitter to generate a PIN.</li>

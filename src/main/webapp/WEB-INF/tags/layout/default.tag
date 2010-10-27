@@ -13,13 +13,13 @@
     <body>
         <div id="container">
             <div id="header">
-                <a href="<c:url value="/"/>"><img src="<c:url value="/images/jittr.jpg"/>"/></a>
+                <a href="<c:url value="/"/>"><img src="<c:url value="/images/question-mark.jpg"/>"/></a>
             </div>
             <div id="content">
                 <jsp:invoke fragment="content"/>
             </div>
             <div id="footer">
-                Rally + CU = <a href="http://www.rallyedu.net">RallyEDU.net</a>
+                Why remember the tweets when you can save them!</a>
             </div>
         </div>
     </body>
