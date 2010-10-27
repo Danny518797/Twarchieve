@@ -42,6 +42,7 @@ public class TwitterFilter implements Filter {
         * This section signs you into twitter
         * TODO: Make this redirect to twitter and let the user accept adding StreamSavr
         */
+
         AccessToken accessToken = getAccessToken(session);
         if (accessToken == null) {
             accessToken = getSystemPropertyBasedAccessToken();

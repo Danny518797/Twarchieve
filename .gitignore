@@ -1,2 +1,5 @@
 #Intellij Files
 StreamSavr.i*
+
+#Maven build(?) directory
+target

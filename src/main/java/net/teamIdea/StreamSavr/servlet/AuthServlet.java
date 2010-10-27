@@ -33,15 +33,16 @@ public class AuthServlet extends HttpServlet {
             RequestToken requestToken = twitter.getOAuthRequestToken(callbackURL.toString());
             req.getSession().setAttribute("requestToken", requestToken);
             req.setAttribute(AUTH_URL_ATTRIBUTE, requestToken.getAuthorizationURL());
-            //resp.sendRedirect(requestToken.getAuthenticationURL());
-           req.getRequestDispatcher(AUTH_FORM_VIEW).forward(req, resp);
+            req.getRequestDispatcher(AUTH_FORM_VIEW).forward(req, resp);
 
         } catch (TwitterException e) {
             throw new ServletException(e);
         }
 
     }
-        /*Twitter twitter = newTwitter();
+
+    /*
+        Twitter twitter = newTwitter();
         try {
             StringBuffer callbackURL = req.getRequestURL();
             int index = callbackURL.lastIndexOf("/");
@@ -57,8 +58,9 @@ public class AuthServlet extends HttpServlet {
             req.getRequestDispatcher(AUTH_FORM_VIEW).forward(req, resp);
         } catch (TwitterException e) {
             resp.sendError(e.getStatusCode(), e.getMessage());
-        }  */
-    //}
+        }
+    }
+    */
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -3,6 +3,6 @@
 
 <layout:default title="Callback" >
     <jsp:attribute name="content">
-        Hello world! You've calledback!
+        <img src="<c:url value="/images/animated-exclaim.gif"/>"/>You've successfully authenticated!<img src="<c:url value="/images/animated-exclaim.gif"/>"/>
     </jsp:attribute>
 </layout:default>

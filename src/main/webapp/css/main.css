@@ -28,6 +28,8 @@ img {
 
 #content {
     overflow:auto;
+    background-color:#B0B0B0;
+    color: black;
 }
 
 #footer {

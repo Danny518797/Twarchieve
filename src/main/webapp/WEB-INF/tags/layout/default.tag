@@ -7,8 +7,8 @@
 
 <html>
     <head>
-        <title><c:out value="${title != null ? title : 'Jittr'}"/></title>
-        <link rel="stylesheet" href="<c:url value="/css/jittr.css"/>"/>
+        <title><c:out value="${title != null ? title : 'StreamSavr'}"/></title>
+        <link rel="stylesheet" href="<c:url value="/css/main.css"/>"/>
     </head>
     <body>
         <div id="container">
@@ -19,7 +19,7 @@
                 <jsp:invoke fragment="content"/>
             </div>
             <div id="footer">
-                Why remember the tweets when you can save them!</a>
+                Why remember the tweets when you can save them!
             </div>
         </div>
     </body>
