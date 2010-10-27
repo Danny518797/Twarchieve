@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class TwitterUtils {
-    private static final String CONSUMER_KEY = "GDpdLtJsTJmpx3Ng45lkA";
-    private static final String CONSUMER_SECRET = "TYg5i09b4Nok9IoctRCFGQl987s9RELluKQneYHD0U";
+    private static final String CONSUMER_KEY = "S1KhK1GX3KFneNEWd3AClA";
+    private static final String CONSUMER_SECRET = "G0dLbBSM3zaS6CpBkZlicqRzD1PE1UiV89GsBBl784";
     public static final String ACCESS_TOKEN_ATTRIBUTE = "accessToken";
     public static final String TWITTER_ATTRIBUTE = "twitter";
 
