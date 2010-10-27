@@ -32,7 +32,9 @@ public class AuthServlet extends HttpServlet {
 
             RequestToken requestToken = twitter.getOAuthRequestToken(callbackURL.toString());
             req.getSession().setAttribute("requestToken", requestToken);
-            resp.sendRedirect(requestToken.getAuthenticationURL());
+            req.setAttribute(AUTH_URL_ATTRIBUTE, requestToken.getAuthorizationURL());
+            //resp.sendRedirect(requestToken.getAuthenticationURL());
+           req.getRequestDispatcher(AUTH_FORM_VIEW).forward(req, resp);
 
         } catch (TwitterException e) {
             throw new ServletException(e);
