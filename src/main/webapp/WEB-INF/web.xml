@@ -7,7 +7,7 @@
 
     <servlet>
         <servlet-name>auth</servlet-name>
-        <servlet-class>net.rallyedu.StreamSavr.servlet.AuthServlet</servlet-class>
+        <servlet-class>net.teamIdea.StreamSavr.servlet.AuthServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>auth</servlet-name>
@@ -16,7 +16,7 @@
 
     <servlet>
         <servlet-name>timeline</servlet-name>
-        <servlet-class>net.rallyedu.StreamSavr.servlet.TimelineServlet</servlet-class>
+        <servlet-class>net.teamIdea.StreamSavr.servlet.TimelineServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>timeline</servlet-name>
@@ -25,7 +25,7 @@
 
     <servlet>
         <servlet-name>tweet</servlet-name>
-        <servlet-class>net.rallyedu.StreamSavr.servlet.TweetServlet</servlet-class>
+        <servlet-class>net.teamIdea.StreamSavr.servlet.TweetServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>tweet</servlet-name>
@@ -34,7 +34,7 @@
 
     <servlet>
         <servlet-name>friends</servlet-name>
-        <servlet-class>net.rallyedu.StreamSavr.servlet.FriendsServlet</servlet-class>
+        <servlet-class>net.teamIdea.StreamSavr.servlet.FriendsServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>friends</servlet-name>
@@ -43,7 +43,7 @@
 
     <filter>
         <filter-name>twitter</filter-name>
-        <filter-class>net.rallyedu.StreamSavr.filter.TwitterFilter</filter-class>
+        <filter-class>net.teamIdea.StreamSavr.filter.TwitterFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>twitter</filter-name>
