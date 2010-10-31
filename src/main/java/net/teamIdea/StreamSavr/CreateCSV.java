@@ -59,7 +59,7 @@ public class CreateCSV {
         return file.delete();
     }
 
-    public String createCSV(TweetList data)
+    public boolean createCSV(TweetList data)
     {
         source = data;
         sFileName = source.getUsername();
@@ -89,6 +89,7 @@ public class CreateCSV {
         catch (IOException e){
 
         }
+        return true;
 
     }
 
@@ -106,7 +107,7 @@ public class CreateCSV {
                 currentLocation = modified.indexOf(Quotes,lastLocation);
                 if (currentLocation != -1)
                 {
-                    modified.append(quotes, cgit urrentLocation, 1);
+                    modified.append(quotes, currentLocation, 1);
                 }
                 lastLocation = currentLocation+1;
             }
