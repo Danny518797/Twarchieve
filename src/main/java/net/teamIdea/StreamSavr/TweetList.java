@@ -2,6 +2,7 @@ package net.teamIdea.StreamSavr;
 
 import java.util.ArrayList;
 import java.util.List;
+import twitter4j.Tweet;
 
 /**
  * Created by IntelliJ IDEA.
