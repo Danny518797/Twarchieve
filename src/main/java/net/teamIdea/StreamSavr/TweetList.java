@@ -38,6 +38,8 @@ public class TweetList {
         return tweetList.size() - 1; //return the element number of the tweet just added. ie, first element is 0, 2nd is 1, etc.
     }
 
+    /*Uninteresting setters and getters below...*/
+
     public int getSize()
     {
         return tweetListLength;
@@ -61,5 +63,7 @@ public class TweetList {
         this.tweetList = tweetList;
     }
 
+    public String getUsername(){ return username; }
+    public String getUid(){ return uid; }
 
 }
