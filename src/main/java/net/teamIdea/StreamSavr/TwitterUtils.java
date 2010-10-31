@@ -1,7 +1,6 @@
 package net.teamIdea.StreamSavr;
 
-import twitter4j.Twitter;
-import twitter4j.TwitterFactory;
+import twitter4j.*;
 import twitter4j.http.AccessToken;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,5 +34,15 @@ public class TwitterUtils {
 
     public static void setTwitter(HttpServletRequest request, Twitter twitter) {
         request.setAttribute(TWITTER_ATTRIBUTE, twitter);
+    }
+
+    public TweetList getTweets(Twitter twitter)
+    {
+        try {
+            Paging page = new Paging(0, 20);
+            twitter.getUserTimeline(page);
+        } catch (TwitterException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 }

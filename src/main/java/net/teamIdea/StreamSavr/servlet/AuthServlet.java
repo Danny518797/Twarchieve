@@ -38,7 +38,6 @@ public class AuthServlet extends HttpServlet {
         } catch (TwitterException e) {
             throw new ServletException(e);
         }
-
     }
 
     /*
