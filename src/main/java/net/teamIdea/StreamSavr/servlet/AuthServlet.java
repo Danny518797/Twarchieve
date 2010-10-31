@@ -1,5 +1,7 @@
 package net.teamIdea.StreamSavr.servlet;
 
+import net.teamIdea.StreamSavr.TweetList;
+import net.teamIdea.StreamSavr.TwitterUtils;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.http.RequestToken;
@@ -73,5 +75,10 @@ public class AuthServlet extends HttpServlet {
         } catch (TwitterException e) {
             resp.sendError(e.getStatusCode(), e.getMessage());
         }
+
+        TwitterUtils twitterTest = new TwitterUtils();
+        twitterTest.setTwitterThing(twitter);
+        TweetList statuses = twitterTest.getTweets();
+        System.out.println(statuses.getTweet(0).getText());
     }
 }
