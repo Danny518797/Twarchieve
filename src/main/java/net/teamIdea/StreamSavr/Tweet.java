@@ -18,4 +18,9 @@ public class Tweet {
         this.date = date;
         this.sid = sid;
     }
+
+    public String getStatus(){ return statusText; }    
+    /* Returns the unique status ID of the tweet as a string */
+    public String getSid() {return sid;}
+    public String getDate() {return date;}
 }
