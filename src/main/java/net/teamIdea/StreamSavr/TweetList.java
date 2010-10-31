@@ -2,7 +2,8 @@ package net.teamIdea.StreamSavr;
 
 import java.util.ArrayList;
 import java.util.List;
-import twitter4j.Tweet;
+
+import twitter4j.Status;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,11 +17,11 @@ public class TweetList {
     String username; //User name of the user.
     String uid; //Unique user ID.
 
-    List<Tweet> tweetList = new ArrayList();
+    List<Status> tweetList = new ArrayList();
     int tweetListLength = 0;
     
     /* Returns the tweet object at the nth place in the tweetList, where 'tweetToGet' is set the nth place */
-    public Tweet getTweet(int tweetToGet)
+    public Status getTweet(int tweetToGet)
     {
         return tweetList.get( tweetToGet );
     }
@@ -29,7 +30,7 @@ public class TweetList {
     * Description: Adds a tweet to the end of the tweetList
     * Return: Returns the element number of the tweet just added. ie, first element is 0, 2nd is 1, etc.
     */
-    public int addTweet(Tweet tweetToAdd)
+    public int addTweet(Status tweetToAdd)
     {
         tweetList.add(tweetToAdd);
 
@@ -58,7 +59,7 @@ public class TweetList {
     }
 
     /* tweetList setter */
-    public void setTweetList(List<Tweet> tweetList)
+    public void setTweetList(List<Status> tweetList)
     {
         this.tweetList = tweetList;
     }
