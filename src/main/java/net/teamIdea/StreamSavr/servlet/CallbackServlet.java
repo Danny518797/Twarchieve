@@ -28,6 +28,9 @@ public class CallbackServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Twitter twitter = getTwitter(request); //Get the twitter object off the session.
+
+        checkLoggedIn(response, twitter);
+
         RequestToken requestToken = (RequestToken) request.getSession().getAttribute("requestToken");
         String verifier = request.getParameter("oauth_verifier");
         try {

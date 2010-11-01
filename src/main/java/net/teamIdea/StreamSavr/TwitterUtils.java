@@ -4,7 +4,9 @@ import twitter4j.*;
 import twitter4j.http.AccessToken;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,7 @@ public class TwitterUtils {
     private static final String CONSUMER_SECRET = "G0dLbBSM3zaS6CpBkZlicqRzD1PE1UiV89GsBBl784";
     public static final String ACCESS_TOKEN_ATTRIBUTE = "accessToken";
     public static final String TWITTER_ATTRIBUTE = "twitter";
+    public static final String AUTH_URI = "auth";
 
     public static Twitter newTwitter() {
         return new TwitterFactory().getOAuthAuthorizedInstance(CONSUMER_KEY, CONSUMER_SECRET);
@@ -37,6 +40,17 @@ public class TwitterUtils {
     public static void setTwitter(HttpServletRequest request, Twitter twitter) {
         request.getSession().setAttribute(TWITTER_ATTRIBUTE, twitter);
     }
+
+    public static void checkLoggedIn(HttpServletResponse response, Twitter twitter) {
+        if( twitter == null ) {
+            try {
+                response.sendRedirect(AUTH_URI);
+            } catch (IOException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
+    }
+
 
     /* Description: gets all of the users tweets and returns them as a tweet list
      * Arguments: twitter, the twitter object of the current user.

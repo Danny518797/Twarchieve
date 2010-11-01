@@ -32,6 +32,7 @@
         <url-pattern>/callback</url-pattern>
     </servlet-mapping>
 
+    <!-- jittr code
     <servlet>
         <servlet-name>timeline</servlet-name>
         <servlet-class>net.teamIdea.StreamSavr.servlet.TimelineServlet</servlet-class>
@@ -50,6 +51,7 @@
         <url-pattern>/tweet</url-pattern>
     </servlet-mapping>
 
+
     <servlet>
         <servlet-name>friends</servlet-name>
         <servlet-class>net.teamIdea.StreamSavr.servlet.FriendsServlet</servlet-class>
@@ -58,11 +60,14 @@
         <servlet-name>friends</servlet-name>
         <url-pattern>/friends</url-pattern>
     </servlet-mapping>
+    -->
 
     <filter>
         <filter-name>twitter</filter-name>
         <filter-class>net.teamIdea.StreamSavr.filter.TwitterFilter</filter-class>
     </filter>
+
+    <!-- Old jitter code
     <filter-mapping>
         <filter-name>twitter</filter-name>
         <url-pattern>/timeline</url-pattern>
@@ -75,5 +80,6 @@
         <filter-name>twitter</filter-name>
         <url-pattern>/friends</url-pattern>
     </filter-mapping>
+    -->
 
 </web-app>
