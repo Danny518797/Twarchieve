@@ -16,11 +16,9 @@ import static net.teamIdea.StreamSavr.TwitterUtils.setAccessToken;
 import static net.teamIdea.StreamSavr.TwitterUtils.setTwitter;
 
 public class AuthServlet extends HttpServlet {
-    public static final String AUTH_FORM_VIEW = "/WEB-INF/jsp/authForm.jsp";
-    public static final String AUTH_RESULTS_VIEW = "/WEB-INF/jsp/authResults.jsp";
+    public static final String AUTH_FORM_VIEW = "/WEB-INF/jsp/auth.jsp";
     public static final String AUTH_URL_ATTRIBUTE = "authUrl";
     public static final String REQUEST_TOKEN_ATTRIBUTE = "requestToken";
-    public static final String PIN_PARAM = "pin";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -32,7 +30,7 @@ public class AuthServlet extends HttpServlet {
             callbackURL.replace(index, callbackURL.length(), "").append("/callback");
 
             RequestToken requestToken = twitter.getOAuthRequestToken(callbackURL.toString());
-            req.getSession().setAttribute("requestToken", requestToken);
+            req.getSession().setAttribute(REQUEST_TOKEN_ATTRIBUTE, requestToken);
             req.setAttribute(AUTH_URL_ATTRIBUTE, requestToken.getAuthorizationURL());
             req.getRequestDispatcher(AUTH_FORM_VIEW).forward(req, resp);
 
@@ -60,7 +58,6 @@ public class AuthServlet extends HttpServlet {
             resp.sendError(e.getStatusCode(), e.getMessage());
         }
     }
-    */
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -74,5 +71,5 @@ public class AuthServlet extends HttpServlet {
         } catch (TwitterException e) {
             resp.sendError(e.getStatusCode(), e.getMessage());
         }
-    }
+    }*/
 }
