@@ -80,7 +80,7 @@ public class TwitterUtils {
             //System.out.println("toArchive size: " + toArchive.getSize());
 
             int currentPage = 1; //For paging variable. Start at page 1, then increment with each loop (get the next 200 tweets).
-            while(tweets.size() > 0) //quit loop if there are no more tweets to get.
+            while(tweets.size() > 0 && currentPage <=5) //quit loop if there are no more tweets to get.
             {
                 //loop through tweet and add each status object to toArchive
                 for( Status i : tweets)
@@ -92,10 +92,9 @@ public class TwitterUtils {
 
                 //Increment page variable to fetch next page on getUserTimeline call.
                 currentPage++;
-                page.setPage(currentPage);
 
                 //Get the next page.
-                tweets = twitter.getUserTimeline(page);
+                tweets = twitter.getUserTimeline(new Paging(currentPage, 200));
             }
 
 
