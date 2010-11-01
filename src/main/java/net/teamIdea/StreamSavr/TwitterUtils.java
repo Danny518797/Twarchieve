@@ -5,6 +5,8 @@ import twitter4j.http.AccessToken;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TwitterUtils {
     private static final String CONSUMER_KEY = "S1KhK1GX3KFneNEWd3AClA";
@@ -40,9 +42,9 @@ public class TwitterUtils {
      * Arguments: twitter, the twitter object of the current user.
      * Return: A TweetList containing all of the user's tweets (up to 3200).
      */
-    public static TweetList getTweets(Twitter twitter)
+    public static List getTweets(Twitter twitter)
     {
-        TweetList toArchive = new TweetList();
+        List<Status> toArchive = new ArrayList();
 
         try {
             Paging page = new Paging(1, 200);
@@ -59,11 +61,11 @@ public class TwitterUtils {
             {
                 //loop through tweet and add each status object to toArchive
                 for( Status i : tweets)
-                    toArchive.addTweet(i);
+                    toArchive.add(i);
 
                 /* Debug: */
-                //for(int i = 0; i < toArchive.getSize(); ++i)
-                //    System.out.println(toArchive.getTweet(i).getText());
+                //for(int i = 0; i < toArchive.size(); ++i)
+                //    System.out.println(toArchive.get(i).getText());
 
                 //Increment page variable to fetch next page on getUserTimeline call.
                 currentPage++;
