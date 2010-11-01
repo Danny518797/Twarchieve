@@ -1,16 +1,20 @@
 package net.teamIdea.StreamSavr.servlet;
 
+import net.teamIdea.StreamSavr.CreateCSV;
 import net.teamIdea.StreamSavr.TweetList;
+import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.http.AccessToken;
 import twitter4j.http.RequestToken;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 import static net.teamIdea.StreamSavr.TwitterUtils.*;
 
@@ -23,23 +27,35 @@ import static net.teamIdea.StreamSavr.TwitterUtils.*;
  */
 public class ArchiverServlet extends HttpServlet {
 
-    public static final String CALLBACK_FORM_VIEW = "/WEB-INF/jsp/archiver.jsp";
-    public static final String HITS_REMAINING_ATTRIBUTE = "hitsRemaining";
+    public static final String ARCHIVER_VIEW = "/WEB-INF/jsp/archiver.jsp";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Twitter twitter = getTwitter(request);
 
-        try {
-            request.setAttribute(HITS_REMAINING_ATTRIBUTE, twitter.getRateLimitStatus().getRemainingHits());
-        } catch (TwitterException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        /* Too afraid to try this... */
+        List<Status> test = getTweets(twitter);
 
-        //TweetList test = getTweets(twitter);
+        CreateCSV csv = new CreateCSV();
 
-        request.getRequestDispatcher(CALLBACK_FORM_VIEW).forward(request, response);
+        byte[] csvToSend = csv.createCSV(test);
+        //System.out.println("Location: " + csv.getLocation() + " Filename: " + csv.getFilename());
 
+        response.setHeader("Content-disposition",
+                  "attachment; filename=" +
+                  "tweets.csv" );
+        response.setContentType("application/csv");
+        ServletOutputStream out = response.getOutputStream();
+        out.write(csvToSend);
+        out.flush();
+        out.close();
+
+
+        //for(Status i: test)
+        //    System.out.println(i.getText());
+
+
+        //request.getRequestDispatcher(ARCHIVER_VIEW).forward(request, response);
 
         /* Old code:
         Twitter twitter = (Twitter) request.getSession().getAttribute("twitter");

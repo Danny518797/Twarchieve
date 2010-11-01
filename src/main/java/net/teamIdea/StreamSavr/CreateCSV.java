@@ -2,13 +2,7 @@ package net.teamIdea.StreamSavr;
 import twitter4j.Status;
 import twitter4j.Tweet;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.Writer;
-import java.lang.Long;
-import java.util.Date;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.lang.StringBuffer;
@@ -28,6 +22,7 @@ public class CreateCSV {
     private Status tweet;
     private Writer output;
     private File file;
+    byte[] csvBytes;
 
 
     public String getFilename()
@@ -59,8 +54,13 @@ public class CreateCSV {
         return file.delete();
     }
 
-    public boolean createCSV(List data)
+    public byte[] getCSVBytes() {
+        return csvBytes;
+    }
+
+    public byte[] createCSV(List data)
     {
+        String csvInMemory = new String();
         source = data;
         sFileName = source.get(0).getUser().getScreenName();
         String intermediate;
@@ -79,17 +79,31 @@ public class CreateCSV {
             {
                 tweet = source.get(i);
                 intermediate = df.format(tweet.getCreatedAt());
+
+                csvInMemory += addQuotes(intermediate);
                 output.write(addQuotes(intermediate));
+
+                csvInMemory += ',';
                 output.write(',');
+
                 intermediate = tweet.getText();
+
+                csvInMemory += modifyStringForCSV(intermediate);
                 output.write(modifyStringForCSV(intermediate));
+
+                csvInMemory += '\n';
                 output.write('\n');
             }
+            output.close();
         }
         catch (IOException e){
 
         }
-        return true;
+
+        this.csvBytes = csvInMemory.getBytes();
+        return this.csvBytes;
+
+        //return true;
 
     }
 

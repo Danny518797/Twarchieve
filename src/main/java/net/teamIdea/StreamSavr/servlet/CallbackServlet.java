@@ -24,12 +24,13 @@ import static net.teamIdea.StreamSavr.TwitterUtils.*;
  */
 public class CallbackServlet extends HttpServlet {
 
-    public static final String CALLBACK_FORM_VIEW = "/WEB-INF/jsp/callback.jsp";
+    public static final String CALLBACK_VIEW = "/WEB-INF/jsp/callback.jsp";
+    public static final String HITS_REMAINING_ATTRIBUTE = "hitsRemaining";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Twitter twitter = getTwitter(request); //Get the twitter object off the session.
 
-        checkLoggedIn(response, twitter);
+        //checkLoggedIn(response, twitter);
 
         RequestToken requestToken = (RequestToken) request.getSession().getAttribute("requestToken");
         String verifier = request.getParameter("oauth_verifier");
@@ -38,11 +39,12 @@ public class CallbackServlet extends HttpServlet {
             setAccessToken(request.getSession(), aToken);
             setTwitter(request, twitter);
             request.getSession().removeAttribute("requestToken");
+            request.setAttribute(HITS_REMAINING_ATTRIBUTE, twitter.getRateLimitStatus().getRemainingHits());
         } catch (TwitterException e) {
             throw new ServletException(e);
         }
 
-        request.getRequestDispatcher(CALLBACK_FORM_VIEW).forward(request, response); //Parse and send JSP.
+        request.getRequestDispatcher(CALLBACK_VIEW).forward(request, response); //Parse and send JSP.
     }
 
 }

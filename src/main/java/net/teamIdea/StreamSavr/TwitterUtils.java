@@ -48,6 +48,15 @@ public class TwitterUtils {
             } catch (IOException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
+            return;
+        }
+        try {
+            if( !twitter.verifyCredentials().isVerified() )
+                response.sendRedirect(AUTH_URI);
+        } catch (TwitterException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 
