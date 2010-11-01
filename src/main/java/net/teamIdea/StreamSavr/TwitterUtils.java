@@ -36,21 +36,49 @@ public class TwitterUtils {
         request.getSession().setAttribute(TWITTER_ATTRIBUTE, twitter);
     }
 
+    /* Description: gets all of the users tweets and returns them as a tweet list
+     * Arguments: twitter, the twitter object of the current user.
+     * Return: A TweetList containing all of the user's tweets (up to 3200).
+     */
     public static TweetList getTweets(Twitter twitter)
     {
         TweetList toArchive = new TweetList();
 
         try {
-            Paging page = new Paging(1, 20);
-            ResponseList<Status> tweets;
-            tweets = twitter.getUserTimeline(page);
-            toArchive.addTweet(tweets.get(0));
+            Paging page = new Paging(1, 200);
+            ResponseList<Status> tweets; //This is where we store the tweets before moving to TweetList object.
+
+            tweets = twitter.getUserTimeline(page); //get the first set (page) of tweets.
+
+            /* Debug: */
+            //System.out.println("Tweets Size: " + tweets.size());
+            //System.out.println("toArchive size: " + toArchive.getSize());
+
+            int currentPage = 1; //For paging variable. Start at page 1, then increment with each loop (get the next 200 tweets).
+            while(tweets.size() > 0) //quit loop if there are no more tweets to get.
+            {
+                //loop through tweet and add each status object to toArchive
+                for( Status i : tweets)
+                    toArchive.addTweet(i);
+
+                /* Debug: */
+                //for(int i = 0; i < toArchive.getSize(); ++i)
+                //    System.out.println(toArchive.getTweet(i).getText());
+
+                //Increment page variable to fetch next page on getUserTimeline call.
+                currentPage++;
+                page.setPage(currentPage);
+
+                //Get the next page.
+                tweets = twitter.getUserTimeline(page);
+            }
+
 
         } catch (TwitterException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        return toArchive;
+        return toArchive; //return the full archive.
     }
 
 }

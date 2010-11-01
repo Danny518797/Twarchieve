@@ -29,9 +29,7 @@ public class ArchiverServlet extends HttpServlet {
 
         Twitter twitter = getTwitter(request);
 
-        TweetList test = getTweets(twitter);
-
-        System.out.println(test.getTweet(0).getText());
+        //TweetList test = getTweets(twitter);
 
         request.getRequestDispatcher(CALLBACK_FORM_VIEW).forward(request, response);
 
