@@ -15,6 +15,7 @@ import java.io.IOException;
 
 import static net.teamIdea.StreamSavr.TwitterUtils.newTwitter;
 import static net.teamIdea.StreamSavr.TwitterUtils.setAccessToken;
+import static net.teamIdea.StreamSavr.TwitterUtils.setTwitter;
 
 public class AuthServlet extends HttpServlet {
     public static final String AUTH_FORM_VIEW = "/WEB-INF/jsp/authForm.jsp";
@@ -26,7 +27,7 @@ public class AuthServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Twitter twitter = newTwitter();
-        req.getSession().setAttribute("twitter", twitter);
+        setTwitter(req, twitter); //Add the twitter object to the session.
         try {
             StringBuffer callbackURL = req.getRequestURL();
             int index = callbackURL.lastIndexOf("/");

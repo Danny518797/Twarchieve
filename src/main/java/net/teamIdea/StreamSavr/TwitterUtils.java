@@ -31,11 +31,11 @@ public class TwitterUtils {
     }
 
     public static Twitter getTwitter(HttpServletRequest request) {
-        return (Twitter) request.getAttribute(TWITTER_ATTRIBUTE);
+        return (Twitter) request.getSession().getAttribute(TWITTER_ATTRIBUTE);
     }
 
     public static void setTwitter(HttpServletRequest request, Twitter twitter) {
-        request.setAttribute(TWITTER_ATTRIBUTE, twitter);
+        request.getSession().setAttribute(TWITTER_ATTRIBUTE, twitter);
     }
 
     public TweetList getTweets()

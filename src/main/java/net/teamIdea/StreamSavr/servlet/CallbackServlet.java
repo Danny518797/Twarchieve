@@ -26,7 +26,7 @@ public class CallbackServlet extends HttpServlet {
     public static final String CALLBACK_FORM_VIEW = "/WEB-INF/jsp/callback.jsp";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Twitter twitter = (Twitter) request.getSession().getAttribute("twitter");
+        Twitter twitter = getTwitter(request); //Get the twitter object off the session.
         RequestToken requestToken = (RequestToken) request.getSession().getAttribute("requestToken");
         String verifier = request.getParameter("oauth_verifier");
         try {
@@ -38,7 +38,8 @@ public class CallbackServlet extends HttpServlet {
         } catch (TwitterException e) {
             throw new ServletException(e);
         }
-        request.getRequestDispatcher(CALLBACK_FORM_VIEW).forward(request, response);
+
+        request.getRequestDispatcher(CALLBACK_FORM_VIEW).forward(request, response); //Parse and send JSP.
     }
 
 }

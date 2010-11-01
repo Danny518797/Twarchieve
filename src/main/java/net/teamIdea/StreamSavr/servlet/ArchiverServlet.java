@@ -25,7 +25,7 @@ import static net.teamIdea.StreamSavr.TwitterUtils.setTwitter;
  */
 public class ArchiverServlet extends HttpServlet {
 
-    public static final String CALLBACK_FORM_VIEW = "/WEB-INF/jsp/callback.jsp";
+    public static final String CALLBACK_FORM_VIEW = "/WEB-INF/jsp/archiver.jsp";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
