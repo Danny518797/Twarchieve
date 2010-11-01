@@ -32,7 +32,6 @@ public class CallbackServlet extends HttpServlet {
         String verifier = request.getParameter("oauth_verifier");
         try {
             AccessToken aToken = twitter.getOAuthAccessToken(requestToken, verifier);
-            //System.out.println(twitter.getUserTimeline().get(0).getText());
             setAccessToken(request.getSession(), aToken);
             setTwitter(request, twitter);
             request.getSession().removeAttribute("requestToken");

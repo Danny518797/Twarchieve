@@ -24,10 +24,17 @@ import static net.teamIdea.StreamSavr.TwitterUtils.*;
 public class ArchiverServlet extends HttpServlet {
 
     public static final String CALLBACK_FORM_VIEW = "/WEB-INF/jsp/archiver.jsp";
+    public static final String HITS_REMAINING_ATTRIBUTE = "hitsRemaining";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Twitter twitter = getTwitter(request);
+
+        try {
+            request.setAttribute(HITS_REMAINING_ATTRIBUTE, twitter.getRateLimitStatus().getRemainingHits());
+        } catch (TwitterException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
 
         //TweetList test = getTweets(twitter);
 
