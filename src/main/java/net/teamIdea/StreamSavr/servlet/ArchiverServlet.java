@@ -12,9 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static net.teamIdea.StreamSavr.TwitterUtils.getTwitter;
-import static net.teamIdea.StreamSavr.TwitterUtils.setAccessToken;
-import static net.teamIdea.StreamSavr.TwitterUtils.setTwitter;
+import static net.teamIdea.StreamSavr.TwitterUtils.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,18 +27,17 @@ public class ArchiverServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        Twitter twitter = (Twitter)request.getSession().getAttribute("twitter");
+        Twitter twitter = getTwitter(request);
 
-        try {
-            TweetList tweetList = new TweetList();
-            tweetList.addTweet(twitter.getUserTimeline().get(1));
-            System.out.println(tweetList.getTweet(0).getText());
-        } catch (TwitterException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        TweetList test = getTweets(twitter);
+
+        System.out.println(test.getTweet(0).getText());
+
+        request.getRequestDispatcher(CALLBACK_FORM_VIEW).forward(request, response);
 
 
-        /*Twitter twitter = (Twitter) request.getSession().getAttribute("twitter");
+        /* Old code:
+        Twitter twitter = (Twitter) request.getSession().getAttribute("twitter");
         RequestToken requestToken = (RequestToken) request.getSession().getAttribute("requestToken");
         String verifier = request.getParameter("oauth_verifier");
         try {

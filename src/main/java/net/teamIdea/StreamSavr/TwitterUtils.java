@@ -12,8 +12,6 @@ public class TwitterUtils {
     public static final String ACCESS_TOKEN_ATTRIBUTE = "accessToken";
     public static final String TWITTER_ATTRIBUTE = "twitter";
 
-    Twitter twitterThing;
-
     public static Twitter newTwitter() {
         return new TwitterFactory().getOAuthAuthorizedInstance(CONSUMER_KEY, CONSUMER_SECRET);
     }
@@ -38,25 +36,21 @@ public class TwitterUtils {
         request.getSession().setAttribute(TWITTER_ATTRIBUTE, twitter);
     }
 
-    public TweetList getTweets()
+    public static TweetList getTweets(Twitter twitter)
     {
-        TweetList ourTweets = new TweetList();
+        TweetList toArchive = new TweetList();
 
         try {
             Paging page = new Paging(1, 20);
             ResponseList<Status> tweets;
-            tweets = twitterThing.getUserTimeline(page);
-            ourTweets.addTweet(tweets.get(0));
+            tweets = twitter.getUserTimeline(page);
+            toArchive.addTweet(tweets.get(0));
 
         } catch (TwitterException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        return ourTweets;
+        return toArchive;
     }
 
-    public void setTwitterThing(Twitter twitterThing)
-    {
-        this.twitterThing = twitterThing;
-    }
 }
