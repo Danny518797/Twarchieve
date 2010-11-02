@@ -16,7 +16,7 @@ public class TwitterUtils {
     public static final String ACCESS_TOKEN_ATTRIBUTE = "accessToken";
     public static final String TWITTER_ATTRIBUTE = "twitter";
     public static final String AUTH_URI = "auth";
-    public static final int MAX_TRIES = 4;
+    public static final int MAX_TRIES = 4; //Max number of times we hit twitter before giving up.
 
     public static Twitter newTwitter() {
         return new TwitterFactory().getOAuthAuthorizedInstance(CONSUMER_KEY, CONSUMER_SECRET);
@@ -64,66 +64,18 @@ public class TwitterUtils {
 
     /* Description: gets all of the users tweets and returns them as a tweet list
      * Arguments: twitter, the twitter object of the current user.
-     * Return: A TweetList containing all of the user's tweets (up to 3200).
+     * Return: A List<Status> containing all of the user's tweets (up to 3200).
      */
-    public static List getTweets(Twitter twitter)
-    {
-        List<Status> toArchive = new ArrayList();
-
-        try {
-            Paging page = new Paging(1, 200);
-            ResponseList<Status> tweets; //This is where we store the tweets before moving to TweetList object.
-
-            tweets = twitter.getUserTimeline(page); //get the first set (page) of tweets.
-
-            /* Debug: */
-            //System.out.println("Tweets Size: " + tweets.size());
-            //System.out.println("toArchive size: " + toArchive.getSize());
-
-            int currentPage = 1; //For paging variable. Start at page 1, then increment with each loop (get the next 200 tweets).
-            while(tweets.size() > 0) //quit loop if there are no more tweets to get.
-            {
-                //loop through tweet and add each status object to toArchive
-                for( Status i : tweets)
-                    toArchive.add(i);
-
-                /* Debug: */
-                //for(int i = 0; i < toArchive.size(); ++i)
-                //    System.out.println(toArchive.get(i).getText());
-
-                //Increment page variable to fetch next page on getUserTimeline call.
-                currentPage++;
-
-                try {
-                    //Get the next page. Here is where we gracefully handle the crappy twitter API
-                    //crapping out on us.
-                    tweets = twitter.getUserTimeline(new Paging(currentPage, 200));
-                } catch (TwitterException e){
-                    e.printStackTrace();
-                    if ( e.getExceptionCode() == "502" ) {
-                        System.out.println("Error 502, trying again.");
-                        tweets = twitter.getUserTimeline(new Paging(currentPage, 200));
-                    }
-                }
-            }
-
-
-        } catch (TwitterException e) {
-
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        return toArchive; //return the full archive.
-    }
-
-    public static List<Status> getTweetss(Twitter twitter) {
-        List<Status> toArchive = new ArrayList<Status>();
-        ResponseList<Status> tweets; //This is where we store the tweets before moving to TweetList object.
+    public static List<Status> getAllTweets(Twitter twitter) {
+        List<Status> toArchive = new ArrayList<Status>(); //Where all the tweets are copied too.
+        ResponseList<Status> tweets; //Set of 0-200 tweets returned by Twitter.
 
         int currentPage = 0;
         while(currentPage < 17) {
+            //Gets a single page of tweets.
             tweets = getPage(twitter, new Paging(++currentPage, 200), 0);
 
+            //If twitter retuns no tweets, you're done.
             if(tweets == null || tweets.isEmpty()) break;
 
             toArchive.addAll(tweets);
@@ -133,17 +85,23 @@ public class TwitterUtils {
         return toArchive;
     }
 
-    private static ResponseList<Status> getPage(Twitter twitter, Paging page, int numberOfTries) {
+    /* Description: Recursive function that gets a single page worth of tweets (usually 200).
+     *              The function will stop recursing once we've gotten to MAX_TRIES.
+     */
+    private static ResponseList<Status> getPage(Twitter twitter, Paging page, int currentTry) {
         ResponseList<Status> tweets = null;
-        if(numberOfTries < MAX_TRIES) {
+        if(currentTry < MAX_TRIES) {
             try {
                 tweets = twitter.getUserTimeline(page);
             }
             catch(TwitterException e) {
-                e.printStackTrace();
-                if (e.getExceptionCode().equals("502")) {
+                //If we get an error 502, try hitting twitter again (ie recurse).
+                if ( isRecoverable(e.getExceptionCode()) ) {
                     System.out.println("Error 502, trying again.");
-                    tweets = getPage(twitter, page, ++numberOfTries);
+                    tweets = getPage(twitter, page, ++currentTry);
+                }
+                else {
+                    e.printStackTrace();
                 }
             }
         }
@@ -152,6 +110,21 @@ public class TwitterUtils {
         }
 
         return tweets;
+    }
+
+    /* Description: Returns true if the error code supplied is recoverable from. */
+    private static boolean isRecoverable(String errorCode) {
+
+        /* 401 Unauthorized: Authentication credentials were missing or incorrect.
+         * 500 Internal Server Error: Something is broken.  Please post to the group so the Twitter team can investigate.
+         * 502 Bad Gateway: Twitter is down or being upgraded.
+         * 503 Service Unavailable: The Twitter servers are up, but overloaded with requests. Try again later.
+         */
+
+        if(errorCode == "502" || errorCode == "503" || errorCode == "401" || errorCode == "500")
+            return true;
+
+        return false;
     }
 
 }
