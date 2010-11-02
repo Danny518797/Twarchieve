@@ -119,7 +119,7 @@ public class CreateCSV {
         {
             while (currentLocation != -1)
             {
-                currentLocation = modified.indexOf(Quotes,lastLocation);
+                currentLocation = modified.indexOf("\"",lastLocation);
                 if (currentLocation != -1)
                 {
                     modified.insert(currentLocation, '"');
@@ -134,7 +134,7 @@ public class CreateCSV {
         {
             while (currentLocation != -1)
             {
-                currentLocation = modified.indexOf(Commas,lastLocation);
+                currentLocation = modified.indexOf(",",lastLocation);
                 if (currentLocation != -1)
                 {
                     modified.insert(currentLocation+1, '"');
