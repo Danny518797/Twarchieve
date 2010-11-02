@@ -61,11 +61,7 @@ public class TwitterUtils {
     }
 
 
-    /* !!!!!!!!CURRENTLY CRIPPLED: ONLY RETRIEVES 1000 TWEETS MAX!!!!!!!!!!!!!!!!
-     *
-     *
-     *
-     * Description: gets all of the users tweets and returns them as a tweet list
+    /* Description: gets all of the users tweets and returns them as a tweet list
      * Arguments: twitter, the twitter object of the current user.
      * Return: A TweetList containing all of the user's tweets (up to 3200).
      */
