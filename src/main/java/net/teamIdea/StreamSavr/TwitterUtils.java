@@ -96,7 +96,7 @@ public class TwitterUtils {
             }
             catch(TwitterException e) {
                 //If we get an error 502, try hitting twitter again (ie recurse).
-                if ( isRecoverable(e.getExceptionCode()) ) {
+                if ( shouldRetry(e.getExceptionCode()) && hitsRemain(twitter) ) {
                     System.out.println("Error 502, trying again.");
                     tweets = getPage(twitter, page, ++currentTry);
                 }
@@ -112,8 +112,8 @@ public class TwitterUtils {
         return tweets;
     }
 
-    /* Description: Returns true if the error code supplied is recoverable from. */
-    private static boolean isRecoverable(String errorCode) {
+    /* Description: Returns true if, given the error code supplied, we should try to hit the twit API again. */
+    private static boolean shouldRetry(String errorCode) {
 
         /* 401 Unauthorized: Authentication credentials were missing or incorrect.
          * 500 Internal Server Error: Something is broken.  Please post to the group so the Twitter team can investigate.
@@ -123,6 +123,18 @@ public class TwitterUtils {
 
         if(errorCode == "502" || errorCode == "503" || errorCode == "401" || errorCode == "500")
             return true;
+
+        return false;
+    }
+
+    /* Description: Returns true if there is 1 or more twitter API hits left */
+    private static boolean hitsRemain(Twitter twitter) {
+        try {
+            if( twitter.getRateLimitStatus().getRemainingHits() > 0)
+                return true;
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
 
         return false;
     }
