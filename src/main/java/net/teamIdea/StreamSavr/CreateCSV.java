@@ -112,6 +112,7 @@ public class CreateCSV {
         StringBuffer modified = new StringBuffer(text);
         char[] quotes = new char['"'];
         String Quotes = new String(quotes, 0,1);
+        String Commas = new String(quotes, 0,1);
         int currentLocation = 0;
         int lastLocation = 0;
         if (modified.indexOf(Quotes) != -1)
@@ -121,11 +122,31 @@ public class CreateCSV {
                 currentLocation = modified.indexOf(Quotes,lastLocation);
                 if (currentLocation != -1)
                 {
-                    modified.append(quotes, currentLocation, 1);
+                    modified.insert(currentLocation, '"');
+                    //modified.append(quotes, currentLocation, 1);
                 }
                 lastLocation = currentLocation+1;
             }
         }
+        currentLocation = 0;
+        lastLocation =0;
+        if (modified.indexOf(Commas) != -1)
+        {
+            while (currentLocation != -1)
+            {
+                currentLocation = modified.indexOf(Commas,lastLocation);
+                if (currentLocation != -1)
+                {
+                    modified.insert(currentLocation+1, ',');
+                    modified.insert(currentLocation-1, ',');
+                    //modified.append(quotes, currentLocation, 1);
+                }
+                lastLocation = currentLocation+2;
+            }
+        }
+
+
+
         modified.insert(0, '"');
         modified.append('"');
         return modified.toString();
