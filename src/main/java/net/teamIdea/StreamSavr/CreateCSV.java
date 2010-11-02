@@ -109,14 +109,19 @@ public class CreateCSV {
 
     private String modifyStringForCSV(String text)
     {
-        StringBuffer modified = new StringBuffer(text);
-        char[] quotes = new char['"'];
-        String Quotes = new String(quotes, 0,1);
-        String Commas = new String(quotes, 0,1);
+        //StringBuffer modified = new StringBuffer(text);
+        String modified = new String(text);
+        //char[] quotes = new char['"'];
+        String Quotes = new String("\"");
+        String ReplaceQuotes = new String("\"\"");
+        String Commas = new String(",");
+        String ReplaceCammas = new String("\",\"");
         int currentLocation = 0;
         int lastLocation = 0;
-        if (modified.indexOf(Quotes) != -1)
+        if (modified.indexOf('"') != -1)
         {
+            modified.replaceAll(Quotes, ReplaceQuotes)
+            /*
             while (currentLocation != -1)
             {
                 currentLocation = modified.indexOf("\"",lastLocation);
@@ -126,8 +131,9 @@ public class CreateCSV {
                     //modified.append(quotes, currentLocation, 1);
                 }
                 lastLocation = currentLocation+1;
-            }
+            }   */
         }
+        /*
         currentLocation = 0;
         lastLocation =0;
         if (modified.indexOf(Commas) != -1)
@@ -145,11 +151,12 @@ public class CreateCSV {
             }
         }
 
+                            */
 
-
-        modified.insert(0, '"');
+        /*modified.insert(0, '"');
         modified.append('"');
-        return modified.toString();
+        return modified.toString();        */
+        return "\"" + modified + "\"";
         
     }
 
