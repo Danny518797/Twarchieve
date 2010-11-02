@@ -126,7 +126,7 @@ public class CreateCSV {
                 lastLocation = currentLocation+1;
             }
         }
-        modified.insert(0, quotes);
+        modified.insert(0, '"');
         modified.append('"');
         return modified.toString();
         
@@ -136,7 +136,7 @@ public class CreateCSV {
     {
         StringBuffer modified = new StringBuffer(text);
         char[] quotes = new char['"'];
-        modified.insert(0, quotes);
+        modified.insert(0, '"');
         modified.append('"');
         return modified.toString();
 
