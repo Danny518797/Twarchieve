@@ -34,7 +34,7 @@ public class ArchiverServlet extends HttpServlet {
         Twitter twitter = getTwitter(request);
 
         /* Too afraid to try this... */
-        List<Status> test = getTweets(twitter);
+        List<Status> test = getTweetss(twitter);
 
         CreateCSV csv = new CreateCSV();
 

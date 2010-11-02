@@ -64,16 +64,17 @@ public class CreateCSV {
         source = data;
         sFileName = source.get(0).getUser().getScreenName();
         String intermediate;
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
 
         try
         {
             file = File.createTempFile((sFileName + ".csv"), ".tmp");
             output = new BufferedWriter(new FileWriter(file));
-            output.write("Date");
-            output.write(',');
-            output.write("Tweet");
-            output.write('\n');
+            output.write("Date, Tweet, \n");
+            csvInMemory += "Date, Tweet, \n";
+            //output.write(',');
+            //output.write("Tweet");
+            //output.write('\n');
 
             for(int i=0; i < source.size(); i++)
             {
@@ -109,65 +110,14 @@ public class CreateCSV {
 
     private String modifyStringForCSV(String text)
     {
-        //StringBuffer modified = new StringBuffer(text);
         String modified = new String(text);
-        //char[] quotes = new char['"'];
-        String Quotes = new String("\"");
-        String ReplaceQuotes = new String("\"\"");
-        String Commas = new String(",");
-        String ReplaceCammas = new String("\",\"");
-        int currentLocation = 0;
-        int lastLocation = 0;
-        if (modified.indexOf('"') != -1)
-        {
-            modified.replaceAll(Quotes, ReplaceQuotes)
-            /*
-            while (currentLocation != -1)
-            {
-                currentLocation = modified.indexOf("\"",lastLocation);
-                if (currentLocation != -1)
-                {
-                    modified.insert(currentLocation, '"');
-                    //modified.append(quotes, currentLocation, 1);
-                }
-                lastLocation = currentLocation+1;
-            }   */
-        }
-        /*
-        currentLocation = 0;
-        lastLocation =0;
-        if (modified.indexOf(Commas) != -1)
-        {
-            while (currentLocation != -1)
-            {
-                currentLocation = modified.indexOf(",",lastLocation);
-                if (currentLocation != -1)
-                {
-                    modified.insert(currentLocation+1, '"');
-                    modified.insert(currentLocation-1, '"');
-                    //modified.append(quotes, currentLocation, 1);
-                }
-                lastLocation = currentLocation+2;
-            }
-        }
-
-                            */
-
-        /*modified.insert(0, '"');
-        modified.append('"');
-        return modified.toString();        */
+        modified = modified.replaceAll("\"", "\"\"");
         return "\"" + modified + "\"";
-        
     }
 
     private String addQuotes(String text)
     {
-        StringBuffer modified = new StringBuffer(text);
-        char[] quotes = new char['"'];
-        modified.insert(0, '"');
-        modified.append('"');
-        return modified.toString();
-
+        return "\"" + text + "\"";
     }
 
 

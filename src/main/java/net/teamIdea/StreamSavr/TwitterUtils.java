@@ -16,6 +16,7 @@ public class TwitterUtils {
     public static final String ACCESS_TOKEN_ATTRIBUTE = "accessToken";
     public static final String TWITTER_ATTRIBUTE = "twitter";
     public static final String AUTH_URI = "auth";
+    public static final int MAX_TRIES = 4;
 
     public static Twitter newTwitter() {
         return new TwitterFactory().getOAuthAuthorizedInstance(CONSUMER_KEY, CONSUMER_SECRET);
@@ -113,6 +114,44 @@ public class TwitterUtils {
         }
 
         return toArchive; //return the full archive.
+    }
+
+    public static List<Status> getTweetss(Twitter twitter) {
+        List<Status> toArchive = new ArrayList<Status>();
+        ResponseList<Status> tweets; //This is where we store the tweets before moving to TweetList object.
+
+        int currentPage = 0;
+        while(currentPage < 17) {
+            tweets = getPage(twitter, new Paging(++currentPage, 200), 0);
+
+            if(tweets == null || tweets.isEmpty()) break;
+
+            toArchive.addAll(tweets);
+
+        }
+
+        return toArchive;
+    }
+
+    private static ResponseList<Status> getPage(Twitter twitter, Paging page, int numberOfTries) {
+        ResponseList<Status> tweets = null;
+        if(numberOfTries < MAX_TRIES) {
+            try {
+                tweets = twitter.getUserTimeline(page);
+            }
+            catch(TwitterException e) {
+                e.printStackTrace();
+                if (e.getExceptionCode().equals("502")) {
+                    System.out.println("Error 502, trying again.");
+                    tweets = getPage(twitter, page, ++numberOfTries);
+                }
+            }
+        }
+        else {
+            System.out.println("Hit Max Tries: " + MAX_TRIES);
+        }
+
+        return tweets;
     }
 
 }
