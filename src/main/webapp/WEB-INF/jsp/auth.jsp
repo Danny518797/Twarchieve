@@ -6,7 +6,7 @@
         <p>To use StreamSavr, you must authorize the application access your Twitter account. It's Easy as 1:</p>
 
         <ol>
-            <li>Click <a href="<c:out value="${authUrl}"/>" target="_blank">here</a> to log in to Twitter.</li>
+            <li>Click <a href="<c:out value="${authUrl}"/>">here</a> to log in to Twitter.</li>
         </ol>
         <!--    <li>Return to this page and enter the PIN below.</li>
             <li>Click Go.</li>

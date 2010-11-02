@@ -3,6 +3,7 @@
 
 <layout:default title="Callback" >
     <jsp:attribute name="content">
-        <img src="<c:url value="/images/animated-exclaim.gif"/>"/>You've successfully authenticated!<img src="<c:url value="/images/animated-exclaim.gif"/>"/>
+        <img src="<c:url value="/images/animated-exclaim.gif"/>"/><a href="/archiver">Archive your tweets!</a><img src="<c:url value="/images/animated-exclaim.gif"/>"/>
+        <br><b>Hits Remaining: <c:out value="${hitsRemaining}"/></b>
     </jsp:attribute>
 </layout:default>

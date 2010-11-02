@@ -2,17 +2,11 @@ package net.teamIdea.StreamSavr;
 import twitter4j.Status;
 import twitter4j.Tweet;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.Writer;
-import java.lang.Long;
-import java.util.Date;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.lang.StringBuffer;
-
+import java.util.List;
 
 
 /**
@@ -23,11 +17,12 @@ import java.lang.StringBuffer;
  * To change this template use File | Settings | File Templates.
  */
 public class CreateCSV {
-    private TweetList source;
+    private List<Status> source;
     private String sFileName;
     private Status tweet;
     private Writer output;
     private File file;
+    byte[] csvBytes;
 
 
     public String getFilename()
@@ -59,10 +54,15 @@ public class CreateCSV {
         return file.delete();
     }
 
-    public boolean createCSV(TweetList data)
+    public byte[] getCSVBytes() {
+        return csvBytes;
+    }
+
+    public byte[] createCSV(List data)
     {
+        String csvInMemory = new String();
         source = data;
-        sFileName = source.getUsername();
+        sFileName = source.get(0).getUser().getScreenName();
         String intermediate;
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 
@@ -75,21 +75,35 @@ public class CreateCSV {
             output.write("Tweet");
             output.write('\n');
 
-            for(int i=0; i < source.getSize(); i++)
+            for(int i=0; i < source.size(); i++)
             {
-                tweet = source.getTweet(i);
+                tweet = source.get(i);
                 intermediate = df.format(tweet.getCreatedAt());
+
+                csvInMemory += addQuotes(intermediate);
                 output.write(addQuotes(intermediate));
+
+                csvInMemory += ',';
                 output.write(',');
+
                 intermediate = tweet.getText();
+
+                csvInMemory += modifyStringForCSV(intermediate);
                 output.write(modifyStringForCSV(intermediate));
+
+                csvInMemory += '\n';
                 output.write('\n');
             }
+            output.close();
         }
         catch (IOException e){
 
         }
-        return true;
+
+        this.csvBytes = csvInMemory.getBytes();
+        return this.csvBytes;
+
+        //return true;
 
     }
 

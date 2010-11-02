@@ -1,7 +1,5 @@
 package net.teamIdea.StreamSavr.servlet;
 
-import net.teamIdea.StreamSavr.TweetList;
-import net.teamIdea.StreamSavr.TwitterUtils;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.http.RequestToken;
@@ -15,25 +13,24 @@ import java.io.IOException;
 
 import static net.teamIdea.StreamSavr.TwitterUtils.newTwitter;
 import static net.teamIdea.StreamSavr.TwitterUtils.setAccessToken;
+import static net.teamIdea.StreamSavr.TwitterUtils.setTwitter;
 
 public class AuthServlet extends HttpServlet {
-    public static final String AUTH_FORM_VIEW = "/WEB-INF/jsp/authForm.jsp";
-    public static final String AUTH_RESULTS_VIEW = "/WEB-INF/jsp/authResults.jsp";
+    public static final String AUTH_FORM_VIEW = "/WEB-INF/jsp/auth.jsp";
     public static final String AUTH_URL_ATTRIBUTE = "authUrl";
     public static final String REQUEST_TOKEN_ATTRIBUTE = "requestToken";
-    public static final String PIN_PARAM = "pin";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Twitter twitter = newTwitter();
-        req.getSession().setAttribute("twitter", twitter);
+        setTwitter(req, twitter); //Add the twitter object to the session.
         try {
             StringBuffer callbackURL = req.getRequestURL();
             int index = callbackURL.lastIndexOf("/");
             callbackURL.replace(index, callbackURL.length(), "").append("/callback");
 
             RequestToken requestToken = twitter.getOAuthRequestToken(callbackURL.toString());
-            req.getSession().setAttribute("requestToken", requestToken);
+            req.getSession().setAttribute(REQUEST_TOKEN_ATTRIBUTE, requestToken);
             req.setAttribute(AUTH_URL_ATTRIBUTE, requestToken.getAuthorizationURL());
             req.getRequestDispatcher(AUTH_FORM_VIEW).forward(req, resp);
 
@@ -61,7 +58,6 @@ public class AuthServlet extends HttpServlet {
             resp.sendError(e.getStatusCode(), e.getMessage());
         }
     }
-    */
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -75,10 +71,5 @@ public class AuthServlet extends HttpServlet {
         } catch (TwitterException e) {
             resp.sendError(e.getStatusCode(), e.getMessage());
         }
-
-        TwitterUtils twitterTest = new TwitterUtils();
-        twitterTest.setTwitterThing(twitter);
-        TweetList statuses = twitterTest.getTweets();
-        System.out.println(statuses.getTweet(0).getText());
-    }
+    }*/
 }
