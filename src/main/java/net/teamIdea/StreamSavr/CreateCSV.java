@@ -137,8 +137,8 @@ public class CreateCSV {
                 currentLocation = modified.indexOf(Commas,lastLocation);
                 if (currentLocation != -1)
                 {
-                    modified.insert(currentLocation+1, ',');
-                    modified.insert(currentLocation-1, ',');
+                    modified.insert(currentLocation+1, '"');
+                    modified.insert(currentLocation-1, '"');
                     //modified.append(quotes, currentLocation, 1);
                 }
                 lastLocation = currentLocation+2;
