@@ -85,7 +85,7 @@ public class TwitterUtils {
         return toArchive;
     }
 
-    /* Desc: Description: Recursive function that gets a single page worth of tweets (usually 200).
+    /* Description: Recursive function that gets a single page worth of tweets (usually 200).
      *              The function will stop recursing once we've gotten to MAX_TRIES.
      */
     private static ResponseList<Status> getPage(Twitter twitter, Paging page, int currentTry) {
@@ -101,7 +101,6 @@ public class TwitterUtils {
                     tweets = getPage(twitter, page, ++currentTry);
                 }
                 else {
-                    System.out.println("Uh oh");
                     e.printStackTrace();
                 }
             }
