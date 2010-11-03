@@ -34,6 +34,13 @@ public class CallbackServlet extends HttpServlet {
 
         RequestToken requestToken = (RequestToken) request.getSession().getAttribute("requestToken");
         String verifier = request.getParameter("oauth_verifier");
+
+        //Send to /auth if we're missing the requestToken or oauth_verifier.
+        if (requestToken == null || verifier.isEmpty()) {
+            System.out.println("Now redirecting...");
+            response.sendRedirect("/auth");
+        }
+
         try {
             AccessToken aToken = twitter.getOAuthAccessToken(requestToken, verifier);
             setAccessToken(request.getSession(), aToken);

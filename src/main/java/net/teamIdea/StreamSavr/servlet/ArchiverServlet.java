@@ -3,6 +3,7 @@ package net.teamIdea.StreamSavr.servlet;
 import net.teamIdea.StreamSavr.CreateCSV;
 import twitter4j.Status;
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -21,6 +22,7 @@ import static net.teamIdea.StreamSavr.TwitterUtils.*;
  * Time: 3:24:49 PM
  * To change this template use File | Settings | File Templates.
  */
+ 
 public class ArchiverServlet extends HttpServlet {
 
     //public static final String ARCHIVER_VIEW = "/WEB-INF/jsp/archiver.jsp";
@@ -28,6 +30,25 @@ public class ArchiverServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         Twitter twitter = getTwitter(request);
+
+        //If twitter is empty, send to /auth for login.
+        if( twitter == null )
+        {
+            response.sendRedirect("/auth");
+            return;
+        }
+
+        /*
+         * Ugly way of making sure that future calls to twitter's methods won't cause an Illegal State Exception.
+         * If getId() causes an exception, send user back the login page.
+         */
+        try {
+            twitter.getId();
+        } catch (IllegalStateException e) {
+            response.sendRedirect("/auth");
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
 
         List<Status> test = getAllTweets(twitter);
 
@@ -48,5 +69,4 @@ public class ArchiverServlet extends HttpServlet {
         //request.getRequestDispatcher(ARCHIVER_VIEW).forward(request, response);
 
     }
-
 }

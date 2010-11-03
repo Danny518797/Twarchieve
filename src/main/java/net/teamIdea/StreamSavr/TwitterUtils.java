@@ -85,7 +85,7 @@ public class TwitterUtils {
         return toArchive;
     }
 
-    /* Description: Recursive function that gets a single page worth of tweets (usually 200).
+    /* Desc: Description: Recursive function that gets a single page worth of tweets (usually 200).
      *              The function will stop recursing once we've gotten to MAX_TRIES.
      */
     private static ResponseList<Status> getPage(Twitter twitter, Paging page, int currentTry) {
@@ -97,10 +97,11 @@ public class TwitterUtils {
             catch(TwitterException e) {
                 //If we get an error 502, try hitting twitter again (ie recurse).
                 if ( shouldRetry(e.getExceptionCode()) && hitsRemain(twitter) ) {
-                    System.out.println("Error 502, trying again.");
+                    System.out.println("Error. Trying again.");
                     tweets = getPage(twitter, page, ++currentTry);
                 }
                 else {
+                    System.out.println("Uh oh");
                     e.printStackTrace();
                 }
             }
@@ -121,10 +122,8 @@ public class TwitterUtils {
          * 503 Service Unavailable: The Twitter servers are up, but overloaded with requests. Try again later.
          */
 
-        if(errorCode == "502" || errorCode == "503" || errorCode == "401" || errorCode == "500")
-            return true;
+        return errorCode.equals("502") || errorCode.equals("503") || errorCode.equals("401") || errorCode.equals("500");
 
-        return false;
     }
 
     /* Description: Returns true if there is 1 or more twitter API hits left */
