@@ -2,6 +2,7 @@ package net.teamIdea.StreamSavr.filter;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.User;
 import twitter4j.http.AccessToken;
 
 import javax.servlet.Filter;
@@ -47,25 +48,19 @@ public class TwitterFilter implements Filter {
             accessToken = getSystemPropertyBasedAccessToken();
         }
         Twitter twitter = newTwitter(accessToken);
-        if (verifyCredentials(twitter)) {
+
+        try {
+            User twitterUser = twitter.verifyCredentials();
             setTwitter(req, twitter);
+            // setUser(req, twitterUser);
             chain.doFilter(request, response);
-        } else {
-            resp.sendRedirect(AUTH_URI);
+        } catch (TwitterException e) {
+            resp.sendRedirect(AUTH_URI);    
         }
-    }
+   }
 
     @Override
     public void destroy() {
-    }
-
-    private boolean verifyCredentials(Twitter twitter) {
-        try {
-            twitter.verifyCredentials();
-            return true;
-        } catch (TwitterException e) {
-        }
-        return false;
     }
 
     private static AccessToken getSystemPropertyBasedAccessToken() {

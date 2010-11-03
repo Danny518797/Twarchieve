@@ -38,19 +38,13 @@ public class ArchiverServlet extends HttpServlet {
             return;
         }
 
-        /*
-         * Ugly way of making sure that future calls to twitter's methods won't cause an Illegal State Exception.
-         * If getId() causes an exception, send user back the login page.
-         */
+        List<Status> test = null;
         try {
-            twitter.getId();
-        } catch (IllegalStateException e) {
+            test = getAllTweets(twitter);
+        } catch ( IllegalStateException e) {
             response.sendRedirect("/auth");
-        } catch (TwitterException e) {
-            e.printStackTrace();
+            return;
         }
-
-        List<Status> test = getAllTweets(twitter);
 
         CreateCSV csv = new CreateCSV();
 

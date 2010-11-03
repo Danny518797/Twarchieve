@@ -36,9 +36,10 @@ public class CallbackServlet extends HttpServlet {
         String verifier = request.getParameter("oauth_verifier");
 
         //Send to /auth if we're missing the requestToken or oauth_verifier.
-        if (requestToken == null || verifier.isEmpty()) {
+        if (requestToken == null || verifier == null || twitter == null || verifier.isEmpty() ) {
             System.out.println("Now redirecting...");
             response.sendRedirect("/auth");
+            return;
         }
 
         try {

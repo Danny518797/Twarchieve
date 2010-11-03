@@ -66,7 +66,7 @@ public class TwitterUtils {
      * Arguments: twitter, the twitter object of the current user.
      * Return: A List<Status> containing all of the user's tweets (up to 3200).
      */
-    public static List<Status> getAllTweets(Twitter twitter) {
+    public static List<Status> getAllTweets(Twitter twitter) throws IllegalStateException {
         List<Status> toArchive = new ArrayList<Status>(); //Where all the tweets are copied too.
         ResponseList<Status> tweets; //Set of 0-200 tweets returned by Twitter.
 
@@ -88,7 +88,7 @@ public class TwitterUtils {
     /* Description: Recursive function that gets a single page worth of tweets (usually 200).
      *              The function will stop recursing once we've gotten to MAX_TRIES.
      */
-    private static ResponseList<Status> getPage(Twitter twitter, Paging page, int currentTry) {
+    private static ResponseList<Status> getPage(Twitter twitter, Paging page, int currentTry) throws IllegalStateException {
         ResponseList<Status> tweets = null;
         if(currentTry < MAX_TRIES) {
             try {
