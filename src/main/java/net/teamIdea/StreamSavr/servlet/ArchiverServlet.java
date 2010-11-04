@@ -4,6 +4,7 @@ import net.teamIdea.StreamSavr.CreateCSV;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -31,16 +32,9 @@ public class ArchiverServlet extends HttpServlet {
 
         Twitter twitter = getTwitter(request);
 
-        //If twitter is empty, send to /auth for login.
-        if( twitter == null )
-        {
-            response.sendRedirect("/auth");
-            return;
-        }
-
         List<Status> test = null;
         try {
-            test = getAllTweets(twitter);
+            test = getAllTweets(twitter, request);
         } catch ( IllegalStateException e) {
             response.sendRedirect("/auth");
             return;
