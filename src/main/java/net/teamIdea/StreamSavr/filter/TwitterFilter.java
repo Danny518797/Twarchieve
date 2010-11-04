@@ -39,9 +39,6 @@ public class TwitterFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) response;
         HttpSession session = req.getSession();
 
-        /*
-        * This section signs you into twitter
-        */
 
         AccessToken accessToken = getAccessToken(session);
         if (accessToken == null) {

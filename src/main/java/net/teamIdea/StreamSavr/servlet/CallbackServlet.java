@@ -30,17 +30,8 @@ public class CallbackServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Twitter twitter = getTwitter(request); //Get the twitter object off the session.
 
-        //checkLoggedIn(response, twitter);
-
         RequestToken requestToken = (RequestToken) request.getSession().getAttribute("requestToken");
         String verifier = request.getParameter("oauth_verifier");
-
-        //Send to /auth if we're missing the requestToken or oauth_verifier.
-        if (requestToken == null || verifier == null || twitter == null || verifier.isEmpty() ) {
-            System.out.println("Now redirecting...");
-            response.sendRedirect("/auth");
-            return;
-        }
 
         try {
             AccessToken aToken = twitter.getOAuthAccessToken(requestToken, verifier);
