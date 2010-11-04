@@ -90,6 +90,8 @@ public class TwitterUtils {
     public static List<Status> getAllTweets(Twitter twitter, HttpServletRequest request) throws IllegalStateException {
         List<Status> toArchive = new ArrayList<Status>(); //Where all the tweets are copied too.
         ResponseList<Status> tweets; //Set of 0-200 tweets returned by Twitter.
+        Integer downloadedTweets=0;
+        setTweetsDownloaded(request, downloadedTweets);
 
         int currentPage = 0;
         while(currentPage < 17) {
@@ -102,7 +104,7 @@ public class TwitterUtils {
             toArchive.addAll(tweets);
 
             //Update the number of tweets downloaded for use in the status bar.
-            Integer downloadedTweets = (Integer) getTweetsDownloaded(request);
+            downloadedTweets = (Integer) getTweetsDownloaded(request);
             downloadedTweets += tweets.size();
             setTweetsDownloaded(request, downloadedTweets);
 
