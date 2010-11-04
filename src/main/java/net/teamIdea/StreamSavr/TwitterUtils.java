@@ -45,12 +45,12 @@ public class TwitterUtils {
         request.getSession().setAttribute(TWITTER_ATTRIBUTE, twitter);
     }
 
-    public static void setTweetsDownloaded(HttpServletRequest request, String downloaded) {
+    public static void setTweetsDownloaded(HttpServletRequest request, Integer downloaded) {
         request.getSession().setAttribute(DOWNLOADED_TWEETS, downloaded);
     }
 
-    public static String getTweetsDownloaded(HttpServletRequest request) {
-        return (String) request.getSession().getAttribute(DOWNLOADED_TWEETS);
+    public static Integer getTweetsDownloaded(HttpServletRequest request) {
+        return (Integer) request.getSession().getAttribute(DOWNLOADED_TWEETS);
     }
 
 
@@ -93,9 +93,9 @@ public class TwitterUtils {
             toArchive.addAll(tweets);
 
             //Update the number of tweets downloaded for use in the status bar.
-            int downloadedTweets = Integer.parseInt(getTweetsDownloaded(request));
+            Integer downloadedTweets = (Integer) getTweetsDownloaded(request);
             downloadedTweets += tweets.size();
-            setTweetsDownloaded(request, Integer.toString(downloadedTweets));
+            setTweetsDownloaded(request, downloadedTweets);
 
         }
 
