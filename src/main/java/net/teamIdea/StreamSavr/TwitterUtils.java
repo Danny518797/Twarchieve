@@ -108,6 +108,8 @@ public class TwitterUtils {
             downloadedTweets += tweets.size();
             setTweetsDownloaded(request, downloadedTweets);
 
+            //System.out.println(downloadedTweets);
+
         }
 
         return toArchive;
@@ -129,6 +131,7 @@ public class TwitterUtils {
                     tweets = getPage(twitter, page, ++currentTry);
                 }
                 else {
+                    System.out.println("Unexpected error code: " + e.getExceptionCode());
                     e.printStackTrace();
                 }
             }
