@@ -78,7 +78,7 @@ public class TwitterUtils {
      * Arguments: twitter, the twitter object of the current user.
      * Return: A List<Status> containing all of the user's tweets (up to 3200).
      */
-    public static List<Status> getAllTweets(Twitter twitter) throws IllegalStateException {
+    public static List<Status> getAllTweets(Twitter twitter, HttpServletRequest request) throws IllegalStateException {
         List<Status> toArchive = new ArrayList<Status>(); //Where all the tweets are copied too.
         ResponseList<Status> tweets; //Set of 0-200 tweets returned by Twitter.
 
@@ -91,6 +91,11 @@ public class TwitterUtils {
             if(tweets == null || tweets.isEmpty()) break;
 
             toArchive.addAll(tweets);
+
+            //Update the number of tweets downloaded for use in the status bar.
+            int downloadedTweets = Integer.parseInt(getTweetsDownloaded(request));
+            downloadedTweets += tweets.size();
+            setTweetsDownloaded(request, Integer.toString(downloadedTweets));
 
         }
 
