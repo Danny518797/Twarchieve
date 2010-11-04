@@ -32,6 +32,8 @@ public class ArchiverServlet extends HttpServlet {
 
         Twitter twitter = getTwitter(request);
 
+        setTweetsDownloaded(request, 0);
+
         List<Status> test = null;
         try {
             test = getAllTweets(twitter, request);
