@@ -17,6 +17,9 @@ public class TwitterUtils {
     public static final String TWITTER_ATTRIBUTE = "twitter";
     public static final String AUTH_URI = "auth";
     public static final int MAX_TRIES = 4; //Max number of times we hit twitter before giving up.
+    public static final String DOWNLOADED_TWEETS = "downloaded";
+
+
 
     public static Twitter newTwitter() {
         return new TwitterFactory().getOAuthAuthorizedInstance(CONSUMER_KEY, CONSUMER_SECRET);
@@ -41,6 +44,15 @@ public class TwitterUtils {
     public static void setTwitter(HttpServletRequest request, Twitter twitter) {
         request.getSession().setAttribute(TWITTER_ATTRIBUTE, twitter);
     }
+
+    public static void setTweetsDownloaded(HttpServletRequest request, String downloaded) {
+        request.getSession().setAttribute(DOWNLOADED_TWEETS, downloaded);
+    }
+
+    public static String getTweetsDownloaded(HttpServletRequest request) {
+        return (String) request.getSession().getAttribute(DOWNLOADED_TWEETS);
+    }
+
 
     public static void checkLoggedIn(HttpServletResponse response, Twitter twitter) {
         if( twitter == null ) {
