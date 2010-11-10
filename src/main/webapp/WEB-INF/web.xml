@@ -32,6 +32,15 @@
         <url-pattern>/callback</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>progress</servlet-name>
+        <servlet-class>net.teamIdea.StreamSavr.servlet.ProgressServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>progress</servlet-name>
+        <url-pattern>/progress</url-pattern>
+    </servlet-mapping>
+
 
     <filter>
         <filter-name>twitter</filter-name>
