@@ -28,7 +28,9 @@ public class ProgressServlet extends HttpServlet {
         Twitter twitter = TwitterUtils.getTwitter(request);
 
         JSONObject progressJSON = new JSONObject();
-        String progressToSend = new String();
+
+        //Add the total number of tweets the user has to the JSON object
+        //Then add the total number of tweets downloaded to the JSON object
         try {
             progressJSON.put("currentProgess", TwitterUtils.getTweetsDownloaded(request));
             progressJSON.put("totalTweets", twitter.verifyCredentials().getStatusesCount());
@@ -38,10 +40,9 @@ public class ProgressServlet extends HttpServlet {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
+        //send the JSON object down the line.
         response.getOutputStream().write( progressJSON.toString().getBytes() );
         response.getOutputStream().flush();
         response.getOutputStream().close();
-
-
     }
 }
