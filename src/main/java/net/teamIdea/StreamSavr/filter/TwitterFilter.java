@@ -17,9 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import static java.lang.System.getProperty;
-import static net.teamIdea.StreamSavr.TwitterUtils.getAccessToken;
-import static net.teamIdea.StreamSavr.TwitterUtils.newTwitter;
-import static net.teamIdea.StreamSavr.TwitterUtils.setTwitter;
+import static net.teamIdea.StreamSavr.TwitterUtils.*;
 
 public class TwitterFilter implements Filter {
     public static final String TOKEN_PROPERTY = "token";
@@ -49,7 +47,7 @@ public class TwitterFilter implements Filter {
         try {
             User twitterUser = twitter.verifyCredentials();
             setTwitter(req, twitter);
-            // setUser(req, twitterUser);
+            setUser(req, twitterUser);
             chain.doFilter(request, response);
         } catch (TwitterException e) {
             resp.sendRedirect(AUTH_URI);    

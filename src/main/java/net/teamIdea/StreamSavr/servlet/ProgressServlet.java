@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import twitter4j.*;
 
 import static net.teamIdea.StreamSavr.TwitterUtils.setTwitter;
@@ -20,15 +23,25 @@ import static net.teamIdea.StreamSavr.TwitterUtils.setTwitter;
  */
 public class ProgressServlet extends HttpServlet {
 
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            request.setAttribute("downloaded_tweets", TwitterUtils.getTweetsDownloaded(request));
-            Twitter twitter = TwitterUtils.getTwitter(request);
-            try {
-                User twitterUser = twitter.verifyCredentials();
-                request.setAttribute("total_tweets", twitterUser.getStatusesCount());//((TwitterUtils.getTwitter(request)).verifyCredentials()).getStatusesCount());
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        Twitter twitter = TwitterUtils.getTwitter(request);
+
+        JSONObject progressJSON = new JSONObject();
+        String progressToSend = new String();
+        try {
+            progressJSON.put("currentProgess", TwitterUtils.getTweetsDownloaded(request));
+            progressJSON.put("totalTweets", twitter.verifyCredentials().getStatusesCount());
         } catch (TwitterException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
-        }
+        response.getOutputStream().write( progressJSON.toString().getBytes() );
+        response.getOutputStream().flush();
+        response.getOutputStream().close();
 
+
+    }
 }

@@ -15,6 +15,7 @@ public class TwitterUtils {
     private static final String CONSUMER_SECRET = "G0dLbBSM3zaS6CpBkZlicqRzD1PE1UiV89GsBBl784";
     public static final String ACCESS_TOKEN_ATTRIBUTE = "accessToken";
     public static final String TWITTER_ATTRIBUTE = "twitter";
+    public static final String USER_ATTRIBUTE = "user";
     public static final String AUTH_URI = "auth";
     public static final int MAX_TRIES = 4; //Max number of times we hit twitter before giving up.
     public static final String DOWNLOADED_TWEETS = "downloaded";
@@ -45,12 +46,20 @@ public class TwitterUtils {
         request.getSession().setAttribute(TWITTER_ATTRIBUTE, twitter);
     }
 
-    public static void setTweetsDownloaded(HttpServletRequest request, String downloaded) {
+    public static void setTweetsDownloaded(HttpServletRequest request, Integer downloaded) {
         request.getSession().setAttribute(DOWNLOADED_TWEETS, downloaded);
     }
 
-    public static String getTweetsDownloaded(HttpServletRequest request) {
-        return (String) request.getSession().getAttribute(DOWNLOADED_TWEETS);
+    public static Integer getTweetsDownloaded(HttpServletRequest request) {
+        return (Integer) request.getSession().getAttribute(DOWNLOADED_TWEETS);
+    }
+
+    public static void setUser(HttpServletRequest request, User user) {
+        request.getSession().setAttribute(USER_ATTRIBUTE, user);
+    }
+
+    public static User getUser(HttpServletRequest request) {
+        return (User) request.getSession().getAttribute(USER_ATTRIBUTE);
     }
 
 
@@ -81,6 +90,8 @@ public class TwitterUtils {
     public static List<Status> getAllTweets(Twitter twitter, HttpServletRequest request) throws IllegalStateException {
         List<Status> toArchive = new ArrayList<Status>(); //Where all the tweets are copied too.
         ResponseList<Status> tweets; //Set of 0-200 tweets returned by Twitter.
+        Integer downloadedTweets=0;
+        setTweetsDownloaded(request, downloadedTweets);
 
         int currentPage = 0;
         while(currentPage < 17) {
@@ -93,9 +104,11 @@ public class TwitterUtils {
             toArchive.addAll(tweets);
 
             //Update the number of tweets downloaded for use in the status bar.
-            int downloadedTweets = Integer.parseInt(getTweetsDownloaded(request));
+            downloadedTweets = (Integer) getTweetsDownloaded(request);
             downloadedTweets += tweets.size();
-            setTweetsDownloaded(request, Integer.toString(downloadedTweets));
+            setTweetsDownloaded(request, downloadedTweets);
+
+            //System.out.println(downloadedTweets);
 
         }
 
@@ -118,6 +131,7 @@ public class TwitterUtils {
                     tweets = getPage(twitter, page, ++currentTry);
                 }
                 else {
+                    System.out.println("Unexpected error code: " + e.getExceptionCode());
                     e.printStackTrace();
                 }
             }
