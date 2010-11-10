@@ -1,9 +1,21 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="layout" tagdir="/WEB-INF/tags/layout" %>
 
-<layout:default title="Callback" >
+
+<layout:default title="StreamSavr Auth Request" >
     <jsp:attribute name="content">
-        <img src="<c:url value="/images/animated-exclaim.gif"/>"/><a href="/archiver">Archive your tweets!</a><img src="<c:url value="/images/animated-exclaim.gif"/>"/>
-        <br><b>Hits Remaining: <c:out value="${hitsRemaining}"/></b>
-    </jsp:attribute>
+
+
+  <div id="container">
+
+        
+     <div id="progress_bar" class="ui-progress-bar ui-container">
+          <div class="ui-progress" style="width: 22%;">
+            <span class="ui-label" style="display:none;">Processing <b class="value">79%</b></span>
+          </div>
+     </div>
+
+
+      </jsp:attribute>
 </layout:default>
+

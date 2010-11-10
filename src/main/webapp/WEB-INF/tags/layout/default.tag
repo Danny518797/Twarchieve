@@ -8,7 +8,11 @@
 <html>
     <head>
         <title><c:out value="${title != null ? title : 'StreamSavr'}"/></title>
-        <link rel="stylesheet" href="<c:url value="/css/main.css"/>"/>
+       <!-- <link rel="stylesheet" href="<c:url value="/css/main.css"/>"/>  -->
+        <link rel="stylesheet" href="<c:url value="/css/ui.css"/>">
+        <link rel="stylesheet" href="<c:url value="/css/ui.progress-bar.css"/>">
+         
+
     </head>
     <body>
         <div id="container">
