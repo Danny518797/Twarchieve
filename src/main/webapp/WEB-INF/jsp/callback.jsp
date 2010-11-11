@@ -9,33 +9,28 @@
              <span class="ui-label" style="display:none;">Processing <b class="value">79%</b></span>
          </div>
      </div>
-
+        <%--<a id="archive_link" href="/archiver">Archive!</a>--%>
         <script type="text/javascript">
 
-            var callback = {
-                success: function(o) {
-                    alert(o.responseText);
-                },
-                failure: function(o) {
-                    alert("failure");
-                }
-                //argument: [argument1, argument2, argument3]
-
-            };
-
-            var progress = YAHOO.util.Connect.asyncRequest('GET', '/progress', callback, null);
             var y = 0;
 
-            function whatToDo(){
 
-                    var callback = {
+            var isDone = false;
+            YAHOO.util.Connect.asyncRequest('GET', '/archiver?c', {success:function(o) {
+                alert('Done');
+                isDone = true;
+                window.location = '<c:url value="/archiver" />';
+            }});
+            function update(){
+
+                var callback = {
                     success: function(o) {
-                        y = y +1;
-                document.getElementById('lawl').style.width = y.toString() +'%';
-                                            //document.getElementById('lawl').style.width = '100%';
-                        //alert(x.toString + '%')  ;
-                        //alert(o.responseText);
-                        //document.getElementById('lawl').style.width = ;
+                        var jsonObject = o.responseText;
+                        var prod = YAHOO.lang.JSON.parse(jsonObject);
+                        //alert(prod['currentProgess']);
+                        var percent = (prod.currentProgess/prod.totalTweets)*100;
+                        document.getElementById('lawl').style.width = percent.toString() +'%';
+
                     },
                     failure: function(o) {
                         alert("failure");
@@ -44,24 +39,13 @@
 
                 };
 
-                var progress = YAHOO.util.Connect.asyncRequest('GET', '/progress', callback, null);
-
-
+                if(!isDone) YAHOO.util.Connect.asyncRequest('GET', '/progress', callback, null);
             }
-            var x = 0;
-            var t;
-            while(x<100){
-                //x = x +1;
-                //document.getElementById('lawl').style.width = x.toString() +'%';
-                t = setTimeout("whatToDo()",1000);
-            }
+
+            setInterval(update,500);
 
 
         </script>
-
-        
-
-
 
       </jsp:attribute>
 </layout:default>

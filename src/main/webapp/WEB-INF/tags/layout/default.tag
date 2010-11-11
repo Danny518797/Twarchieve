@@ -24,6 +24,9 @@
         connection_core.js file.
     -->
     <script src="http://yui.yahooapis.com/2.8.2r1/build/connection/connection_core-min.js"></script>
+    <!-- Source file -->
+    <script src="http://yui.yahooapis.com/2.8.2r1/build/json/json-min.js"></script>
+     
 
     <!--
         Use the full connection.js if you require the following features:

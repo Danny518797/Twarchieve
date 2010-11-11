@@ -30,31 +30,39 @@ public class ArchiverServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        Twitter twitter = getTwitter(request);
+        String c = request.getParameter("c");
+        if(c != null && "".equals(c)) {
+            Twitter twitter = getTwitter(request);
 
-        List<Status> test = null;
-        try {
-            test = getAllTweets(twitter, request);
-        } catch ( IllegalStateException e) {
-            response.sendRedirect("/auth");
-            return;
+            List<Status> test = null;
+            try {
+                test = getAllTweets(twitter, request);
+                request.getSession().setAttribute("TWEETS", test);
+                ServletOutputStream out = response.getOutputStream();
+                out.write("okay".getBytes());
+                out.flush();
+                out.close();
+            } catch ( IllegalStateException e) {
+                response.sendRedirect("/auth");
+            }
+        } else {
+            CreateCSV csv = new CreateCSV();
+            List<Status> test = (List<Status>) request.getSession().getAttribute("TWEETS");
+
+            // null out the session at somepoint
+
+            byte[] csvToSend = csv.createCSV(test);
+            //System.out.println("Location: " + csv.getLocation() + " Filename: " + csv.getFilename());
+
+            response.setHeader("Content-disposition",
+                      "attachment; filename=" +
+                      "tweets.csv" );
+            response.setContentType("application/csv");
+            ServletOutputStream out = response.getOutputStream();
+            out.write(csvToSend);
+            out.flush();
+            out.close();
         }
-
-        CreateCSV csv = new CreateCSV();
-
-        byte[] csvToSend = csv.createCSV(test);
-        //System.out.println("Location: " + csv.getLocation() + " Filename: " + csv.getFilename());
-
-        response.setHeader("Content-disposition",
-                  "attachment; filename=" +
-                  "tweets.csv" );
-        response.setContentType("application/csv");
-        ServletOutputStream out = response.getOutputStream();
-        out.write(csvToSend);
-        out.flush();
-        out.close();
-
         //request.getRequestDispatcher(ARCHIVER_VIEW).forward(request, response);
-
     }
 }
