@@ -26,9 +26,12 @@
 <body>
 <div id="container">
     <div id="header">
-        <h1> StreamSavr </h1>
-        <a href="<c:url value="/"/>"><img src="<c:url value="/images/question-mark.jpg"/>"/></a>
-    </div>
+        <div style="font-size:30pt; font-weight:900">StreamSavr</div>
+        <div style="float:right; position:relative; top:-35px; left:-5px">
+            <c:if test="${userName != null}">
+                Welcome, <c:out value="${userName}"></c:out>
+            </c:if>
+        </div>
     <div id="content">
         <jsp:invoke fragment="content"/>
     </div>
