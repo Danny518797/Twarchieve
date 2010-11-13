@@ -22,7 +22,7 @@
                             success: function(o) {
                                 var jsonObject = o.responseText;
                                 var prod = YAHOO.lang.JSON.parse(jsonObject);
-                                var percent = (prod.currentProgess/prod.totalTweets)*100;
+                                var percent = (prod.currentProgess/prod.totalTweets)*100;                              
                                 document.getElementById('lawl').style.width = percent.toString() +'%';
                             },
                             failure: function(o) {
