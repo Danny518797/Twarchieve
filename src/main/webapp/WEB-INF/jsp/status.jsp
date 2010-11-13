@@ -5,7 +5,7 @@
     <jsp:attribute name="content">
         <div id="progress_bar" class="ui-progress-bar ui-container">
                  <div class="ui-progress" id="lawl" style="width: 80%;">
-                     <span class="ui-label" style="display:none;">Processing <b class="value">79%</b></span>
+                     <span class="ui-label" style="display:none;">Processing <b class="value">0%</b></span>
                  </div>
              </div>
 
