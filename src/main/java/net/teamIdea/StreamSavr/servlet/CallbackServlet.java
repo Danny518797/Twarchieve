@@ -26,6 +26,8 @@ public class CallbackServlet extends HttpServlet {
 
     public static final String CALLBACK_VIEW = "/WEB-INF/jsp/callback.jsp";
     public static final String HITS_REMAINING_ATTRIBUTE = "hitsRemaining";
+    public static final String USER_NAME = "userName";
+    public static final String TOTAL_TWEETS = "totalTweets";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Twitter twitter = getTwitter(request); //Get the twitter object off the session.
@@ -39,6 +41,8 @@ public class CallbackServlet extends HttpServlet {
             setTwitter(request, twitter);
             request.getSession().removeAttribute("requestToken");
             request.setAttribute(HITS_REMAINING_ATTRIBUTE, twitter.getRateLimitStatus().getRemainingHits());
+            request.setAttribute(USER_NAME, twitter.getScreenName());
+             request.setAttribute(TOTAL_TWEETS, twitter.verifyCredentials().getStatusesCount());
         } catch (TwitterException e) {
             throw new ServletException(e);
         }
