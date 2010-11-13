@@ -26,7 +26,6 @@ import static net.teamIdea.StreamSavr.TwitterUtils.*;
  
 public class ArchiverServlet extends HttpServlet {
 
-    //public static final String ARCHIVER_VIEW = "/WEB-INF/jsp/archiver.jsp";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
