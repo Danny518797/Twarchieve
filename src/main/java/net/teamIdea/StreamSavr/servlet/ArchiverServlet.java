@@ -1,6 +1,7 @@
 package net.teamIdea.StreamSavr.servlet;
 
 import net.teamIdea.StreamSavr.CreateCSV;
+import net.teamIdea.StreamSavr.tweetGetter;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -35,7 +36,8 @@ public class ArchiverServlet extends HttpServlet {
 
             List<Status> test = null;
             try {
-                test = getAllTweets(twitter, request);
+                tweetGetter tweetGet = new tweetGetter();
+                test = tweetGet.getAllTweets(twitter, request);
                 request.getSession().setAttribute("TWEETS", test);
                 ServletOutputStream out = response.getOutputStream();
                 out.write("okay".getBytes());
