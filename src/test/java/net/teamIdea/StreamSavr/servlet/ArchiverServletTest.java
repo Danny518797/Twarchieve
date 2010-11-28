@@ -94,4 +94,32 @@ public class ArchiverServletTest {
         verify(out).close();
     }
 
+    public void doGetShouldGetExceptionAndRedirectToAuth() throws Exception {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getParameter("c")).thenReturn("");
+
+        HttpSession session = mock(HttpSession.class);
+        Twitter twitter = mock(Twitter.class);
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute("twitter")).thenReturn(twitter);
+
+
+        ServletOutputStream out = mock(ServletOutputStream.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        when(response.getOutputStream()).thenReturn(out);
+
+        tweetGetter tweetGet = mock(tweetGetter.class);
+        List<Status> test = mock(ArrayList.class);
+        IllegalStateException e = new IllegalStateException();
+        when(tweetGet.getAllTweets(twitter, request)).thenThrow(e);
+
+
+        ArchiverServlet toTest = new ArchiverServlet();
+        toTest.setTweetGet(tweetGet);
+        toTest.doGet(request, response);
+
+        verify(response).sendRedirect("/auth");
+
+    }
+
 }
