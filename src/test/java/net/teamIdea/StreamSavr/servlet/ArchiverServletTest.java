@@ -1,6 +1,7 @@
 package net.teamIdea.StreamSavr.servlet;
 
 
+import net.teamIdea.StreamSavr.CreateCSV;
 import net.teamIdea.StreamSavr.tweetGetter;
 import org.testng.annotations.Test;
 import twitter4j.Status;
@@ -30,7 +31,7 @@ import java.util.List;
 @Test
 public class ArchiverServletTest {
 
-    public void doGetShouldSendOk() throws Exception {
+    public void doGetShouldArchiveTweetsAndSendOk() throws Exception {
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getParameter("c")).thenReturn("");
 
@@ -44,14 +45,24 @@ public class ArchiverServletTest {
         HttpServletResponse response = mock(HttpServletResponse.class);
         when(response.getOutputStream()).thenReturn(out);
 
-        new ArchiverServlet().doGet(request, response);
+        tweetGetter tweetGet = mock(tweetGetter.class);
+        List<Status> test = mock(ArrayList.class);
+        when(tweetGet.getAllTweets(twitter, request)).thenReturn(test);
+
+
+        ArchiverServlet toTest = new ArchiverServlet();
+        toTest.setTweetGet(tweetGet);
+        toTest.doGet(request, response);
+
+        verify(tweetGet).getAllTweets(twitter, request);
+        verify(request.getSession()).setAttribute("TWEETS",test);
         verify(out).write("okay".getBytes());
         verify(out).flush();
         verify(out).close();
 
     }
 
-    public void doGetShouldSendCsv() throws Exception{
+    public void doGetShouldCreateCsvThenSendCsv() throws Exception{
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getParameter("c")).thenReturn(null);
 
@@ -64,12 +75,21 @@ public class ArchiverServletTest {
         ServletOutputStream out = mock(ServletOutputStream.class);
         when(response.getOutputStream()).thenReturn(out);
 
-        new ArchiverServlet().doGet(request, response);
+        CreateCSV csv = mock(CreateCSV.class);
 
+        ArchiverServlet toTest = new ArchiverServlet();
+        byte[] csvToSend = null;
+        toTest.setCSV(csv);
+        when(csv.createCSV(tweetList)).thenReturn(csvToSend);
+        
+        toTest.doGet(request, response);
+
+        verify(csv).createCSV(tweetList);
         verify(response).setHeader("Content-disposition",
                       "attachment; filename=" +
                       "tweets.csv" );
         verify(response).setContentType("application/csv");
+        verify(out).write(csvToSend);
         verify(out).flush();
         verify(out).close();
     }

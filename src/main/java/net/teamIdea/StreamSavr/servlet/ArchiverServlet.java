@@ -27,6 +27,12 @@ import static net.teamIdea.StreamSavr.TwitterUtils.*;
  
 public class ArchiverServlet extends HttpServlet {
 
+    private tweetGetter tweetGet = null;
+    private CreateCSV csv = null;
+
+    /* Setters for testing purposes */
+    public void setTweetGet(tweetGetter tweetGet) { this.tweetGet = tweetGet; }
+    public void setCSV( CreateCSV csv) { this.csv = csv; }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -36,7 +42,9 @@ public class ArchiverServlet extends HttpServlet {
 
             List<Status> test = null;
             try {
-                tweetGetter tweetGet = new tweetGetter();
+                if(tweetGet == null)
+                    tweetGet = new tweetGetter();
+
                 test = tweetGet.getAllTweets(twitter, request);
                 request.getSession().setAttribute("TWEETS", test);
                 ServletOutputStream out = response.getOutputStream();
@@ -47,7 +55,9 @@ public class ArchiverServlet extends HttpServlet {
                 response.sendRedirect("/auth");
             }
         } else {
-            CreateCSV csv = new CreateCSV();
+            if(csv == null)
+                csv = new CreateCSV();
+
             List<Status> test = (List<Status>) request.getSession().getAttribute("TWEETS");
 
             // null out the session at somepoint
