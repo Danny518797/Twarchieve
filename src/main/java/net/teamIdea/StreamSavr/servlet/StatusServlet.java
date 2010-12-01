@@ -24,11 +24,8 @@ import static net.teamIdea.StreamSavr.TwitterUtils.setTwitter;
  */
 public class StatusServlet extends HttpServlet {
     public static final String STATUS_VIEW = "/WEB-INF/jsp/status.jsp";
-    public static final String HITS_REMAINING_ATTRIBUTE = "hitsRemaining";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-
 
         request.getRequestDispatcher(STATUS_VIEW).forward(request, response); //Parse and send JSP.
     }

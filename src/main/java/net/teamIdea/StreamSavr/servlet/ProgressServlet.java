@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import net.teamIdea.StreamSavr.tweetGetter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import twitter4j.*;
@@ -23,11 +24,21 @@ import static net.teamIdea.StreamSavr.TwitterUtils.setTwitter;
  */
 public class ProgressServlet extends HttpServlet {
 
+    private JSONObject progressJSON = null;
+    private Twitter twitter = null;
+
+    public void setJSON(JSONObject json) {this.progressJSON = json;}
+    public void setTwitter(Twitter twit) {this.twitter = twit;}
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        Twitter twitter = TwitterUtils.getTwitter(request);
+        if(twitter == null){
+            twitter = TwitterUtils.getTwitter(request);
+        }
 
-        JSONObject progressJSON = new JSONObject();
+        if(progressJSON == null){
+                    progressJSON = new JSONObject();
+        }
 
         //Add the total number of tweets the user has to the JSON object
         //Then add the total number of tweets downloaded to the JSON object
