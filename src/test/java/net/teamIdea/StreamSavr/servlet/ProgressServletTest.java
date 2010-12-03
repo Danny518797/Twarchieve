@@ -33,8 +33,8 @@ import static org.mockito.Mockito.when;
 @Test
 public class ProgressServletTest {
 
-
-    public void doGetShouldReturnCorrectTweetValues() throws Exception {
+    @Test
+    public void doGetShouldReturnCorrectTweetValuesLowerBound() throws Exception {
         //Setup everything that you are going to mock
         //Mock the HTTP stuff
         HttpServletRequest request = mock(HttpServletRequest.class);
@@ -44,19 +44,21 @@ public class ProgressServletTest {
         Twitter twitter = mock(Twitter.class);
         User user = mock(User.class);
         //Mock the JSON stuff
-        //JSONObject progressJSON = mock(JSONObject.class);
         JSONObject progressJSON = new JSONObject();
+        //Mock the Utilities
+        TwitterUtils twitterUtils = mock(TwitterUtils.class);
 
 
         when(request.getSession()).thenReturn(session);
         when(twitter.verifyCredentials()).thenReturn(user);
-        when(user.getStatusesCount()).thenReturn(300);
+        when(user.getStatusesCount()).thenReturn(0);
+        when(twitterUtils.getTweetsDownloaded(request)).thenReturn(0);
         ServletOutputStream out = mock(ServletOutputStream.class);
         when(response.getOutputStream()).thenReturn(out);
 
         //Setup the JSON object that I am expecting to create
         JSONObject expected = new JSONObject();
-        expected.put("currentProgess", 3000);
+        expected.put("currentProgess", 0);
         expected.put("totalTweets", 0);
 
         //Make the new progress servlet
@@ -64,19 +66,99 @@ public class ProgressServletTest {
         //Setup the servlet and all the stuff it will need
         toTest.setJSON(progressJSON);
         toTest.setTwitter(twitter);
-        TwitterUtils.setTweetsDownloaded(request, 300);
+
         toTest.doGet(request, response);
         //Make sure everything ran that should have
-        verify(progressJSON).put("currentProgess", TwitterUtils.getTweetsDownloaded(request));
-        verify(progressJSON).put("totalTweets", twitter.verifyCredentials().getStatusesCount());
+
         //This should have compared the values
         Assert.assertEquals(progressJSON.get("currentProgess"),expected.get("currentProgess"));
+        Assert.assertEquals(progressJSON.get("totalTweets"),expected.get("totalTweets"));
+
+
+    }
+    @Test
+    public void doGetShouldReturnCorrectTweetValuesUpperBound() throws Exception {
+        //Setup everything that you are going to mock
+        //Mock the HTTP stuff
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        HttpSession session = mock(HttpSession.class);
+        //Mock the Twitter stuff
+        Twitter twitter = mock(Twitter.class);
+        User user = mock(User.class);
+        //Mock the JSON stuff
+        JSONObject progressJSON = new JSONObject();
+        //Mock the Utilities
+        TwitterUtils twitterUtils = mock(TwitterUtils.class);
+
+
+        when(request.getSession()).thenReturn(session);
+        when(twitter.verifyCredentials()).thenReturn(user);
+        when(user.getStatusesCount()).thenReturn(3200);
+        when(twitterUtils.getTweetsDownloaded(request)).thenReturn(3200);
+        ServletOutputStream out = mock(ServletOutputStream.class);
+        when(response.getOutputStream()).thenReturn(out);
+
+        //Setup the JSON object that I am expecting to create
+        JSONObject expected = new JSONObject();
+        expected.put("currentProgess", 3200);
+        expected.put("totalTweets", 3200);
+
+
+        //Make the new progress servlet
+        ProgressServlet toTest = new ProgressServlet();
+        //Setup the servlet and all the stuff it will need
+        toTest.setJSON(progressJSON);
+        toTest.setTwitter(twitter);
+
+
+        toTest.doGet(request, response);
+        //Make sure everything ran that should have
+
+        //This should have compared the values
+        Assert.assertEquals(progressJSON.get("currentProgess"),expected.get("currentProgess"));
+        Assert.assertEquals(progressJSON.get("totalTweets"),expected.get("totalTweets"));
+
+    }
+    @Test
+    public void doGetShouldWriteToStreamCorrectly() throws Exception {
+        //Setup everything that you are going to mock
+        //Mock the HTTP stuff
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        HttpSession session = mock(HttpSession.class);
+        //Mock the Twitter stuff
+        Twitter twitter = mock(Twitter.class);
+        User user = mock(User.class);
+        //Mock the JSON stuff
+        JSONObject progressJSON = new JSONObject();
+        //Mock the Utilities
+        TwitterUtils twitterUtils = mock(TwitterUtils.class);
+
+
+        when(request.getSession()).thenReturn(session);
+        when(twitter.verifyCredentials()).thenReturn(user);
+        when(user.getStatusesCount()).thenReturn(300);
+        when(twitterUtils.getTweetsDownloaded(request)).thenReturn(300);
+        ServletOutputStream out = mock(ServletOutputStream.class);
+        when(response.getOutputStream()).thenReturn(out);
+
+        //Make the new progress servlet
+        ProgressServlet toTest = new ProgressServlet();
+        //Setup the servlet and all the stuff it will need
+        toTest.setJSON(progressJSON);
+        toTest.setTwitter(twitter);
+
+        toTest.doGet(request, response);
+        //Make sure everything ran that should have
+
+        //Make sure it wrote to the output stream
         verify(out).write(progressJSON.toString().getBytes());
         verify(out).flush();
         verify(out).close();
 
     }
-
+    @Test
     public void doGetShouldPassTwitterExceptionCases() throws Exception {
         //Setup everything that you are going to mock
         //Mock the HTTP stuff
@@ -89,6 +171,7 @@ public class ProgressServletTest {
         TwitterException twitterException = mock(TwitterException.class);
         //Mock the JSON stuff
         JSONObject progressJSON = mock(JSONObject.class);
+
 
         when(request.getSession()).thenReturn(session);
         //Here is where you throw the exception
@@ -107,50 +190,43 @@ public class ProgressServletTest {
         toTest.doGet(request, response);
         //Make sure it caught the exception that you wanted it to catch
         verify(twitterException).printStackTrace();
-        verify(progressJSON).put("currentProgess", TwitterUtils.getTweetsDownloaded(request));
-        //The line below will not run since twitter will throw an exception
-        //verify(progressJSON).put("totalTweets", twitter.verifyCredentials().getStatusesCount());
-        verify(out).write(progressJSON.toString().getBytes());
-        verify(out).flush();
-        verify(out).close();
 
     }
-    public void doGetShouldPassJSONExceptionCases() throws Exception {
-           //Setup everything that you are going to mock
-           //Mock the HTTP stuff
-           HttpServletRequest request = mock(HttpServletRequest.class);
-           HttpServletResponse response = mock(HttpServletResponse.class);
-           HttpSession session = mock(HttpSession.class);
-           //Mock the Twitter stuff
-           Twitter twitter = mock(Twitter.class);
-           User user = mock(User.class);
-           //Mock the JSON stuff
-           JSONObject progressJSON = mock(JSONObject.class);
-           JSONException jsonexception = mock(JSONException.class);
-
-
-           when(request.getSession()).thenReturn(session);
-           when(twitter.verifyCredentials()).thenReturn(user);
-           //Throw the JSON exception when this line is hit but make everything else act the same
-           when(progressJSON.put("totalTweets", twitter.verifyCredentials().getStatusesCount())).thenThrow(jsonexception);
-           when(user.getStatusesCount()).thenReturn(300);
-           ServletOutputStream out = mock(ServletOutputStream.class);
-           when(response.getOutputStream()).thenReturn(out);
-
-           //Make the new progress servlet
-           ProgressServlet toTest = new ProgressServlet();
-           //Setup the servlet and all the stuff it will need
-           toTest.setJSON(progressJSON);
-           toTest.setTwitter(twitter);
-           TwitterUtils.setTweetsDownloaded(request, 300);
-           toTest.doGet(request, response);
-
-           //Verify that everything that was supposed to run did run
-           verify(progressJSON).put("currentProgess", TwitterUtils.getTweetsDownloaded(request));
-           verify(progressJSON).put("totalTweets", twitter.verifyCredentials().getStatusesCount());
-           verify(jsonexception).printStackTrace();
-           verify(out).write(progressJSON.toString().getBytes());
-           verify(out).flush();
-           verify(out).close();
-       }
+//    @Test
+//    public void doGetShouldPassJSONExceptionCases() throws Exception {
+//           //Setup everything that you are going to mock
+//           //Mock the HTTP stuff
+//           HttpServletRequest request = mock(HttpServletRequest.class);
+//           HttpServletResponse response = mock(HttpServletResponse.class);
+//           HttpSession session = mock(HttpSession.class);
+//           //Mock the Twitter stuff
+//           Twitter twitter = mock(Twitter.class);
+//           User user = mock(User.class);
+//           //Mock the JSON stuff
+//           JSONObject progressJSON = new JSONObject();
+//           JSONException jsonexception = mock(JSONException.class);
+//           //Mock the utility stuff
+//           TwitterUtils twitterUtils = new TwitterUtils();
+//
+//           when(request.getSession()).thenReturn(session);
+//           when(twitter.verifyCredentials()).thenReturn(user);
+//           //Throw the JSON exception when this line is hit but make everything else act the same
+//           //when(user.getStatusesCount()).thenThrow(jsonexception);
+//           //when(progressJSON.put("currentProgess", twitterUtils.getTweetsDownloaded(request))).thenThrow(jsonexception);
+//           when(progressJSON.put("totalTweets", user.getStatusesCount())).thenThrow(jsonexception);
+//           when(twitterUtils.getTweetsDownloaded(request)).thenReturn(300);
+//           //when(user.getStatusesCount()).thenReturn(300);
+//           ServletOutputStream out = mock(ServletOutputStream.class);
+//           when(response.getOutputStream()).thenReturn(out);
+//
+//           //Make the new progress servlet
+//           ProgressServlet toTest = new ProgressServlet();
+//           //Setup the servlet and all the stuff it will need
+//           toTest.setJSON(progressJSON);
+//           toTest.setTwitter(twitter);
+//           toTest.doGet(request, response);
+//
+//           //Verify that everything that was supposed to run did run
+//           verify(jsonexception).printStackTrace();
+//       }
 }
