@@ -192,6 +192,7 @@ public class ProgressServletTest {
         verify(twitterException).printStackTrace();
 
     }
+    
 //    @Test
 //    public void doGetShouldPassJSONExceptionCases() throws Exception {
 //           //Setup everything that you are going to mock
