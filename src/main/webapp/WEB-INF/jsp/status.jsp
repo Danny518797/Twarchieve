@@ -32,7 +32,7 @@
                             failure: function(o) {
                             }
 
-                        };
+                        };       
 
                         if(!isDone) YAHOO.util.Connect.asyncRequest('GET', '/progress', callback, null);
                     }
