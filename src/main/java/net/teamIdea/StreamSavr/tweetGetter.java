@@ -16,6 +16,8 @@ import static net.teamIdea.StreamSavr.TwitterUtils.setTweetsDownloaded;
  * Time: 4:55:04 PM
  * To change this template use File | Settings | File Templates.
  */
+
+/* Description; this class contains the functions needed to download all a user's tweets from twitter via the twit API.*/
 public class tweetGetter {
 
     public static final int MAX_TRIES = 4; //Max number of times we hit twitter before giving up.
@@ -27,10 +29,11 @@ public class tweetGetter {
     public List<Status> getAllTweets(Twitter twitter, HttpServletRequest request) throws IllegalStateException {
         List<Status> toArchive = new ArrayList<Status>(); //Where all the tweets are copied too.
         ResponseList<Status> tweets; //Set of 0-200 tweets returned by Twitter.
-        Integer downloadedTweets=0;
+        Integer downloadedTweets=0; //Start with 0 tweets downloaded
         setTweetsDownloaded(request, downloadedTweets);
 
-        int currentPage = 0;
+        int currentPage = 0; //Start with the first page.
+        //get a maximum of 17 pages. Twitter only stores 3,200 tweets so this should be more than enough.
         while(currentPage < 17) {
             //Gets a single page of tweets.
             tweets = getPage(twitter, new Paging(++currentPage, 200), 0);
@@ -38,14 +41,12 @@ public class tweetGetter {
             //If twitter retuns no tweets, you're done.
             if(tweets == null || tweets.isEmpty()) break;
 
-            toArchive.addAll(tweets);
+            toArchive.addAll(tweets); //add the downloaded tweets to the archive.
 
             //Update the number of tweets downloaded for use in the status bar.
             downloadedTweets = (Integer) getTweetsDownloaded(request);
             downloadedTweets += tweets.size();
             setTweetsDownloaded(request, downloadedTweets);
-
-            //System.out.println(downloadedTweets);
 
         }
 
@@ -66,7 +67,7 @@ public class tweetGetter {
                 System.out.println("Exception:" + e.getStatusCode());
                 if ( shouldRetry(e.getStatusCode()) && hitsRemain(twitter) ) {
                     System.out.println("Error. Trying again.");
-                    tweets = getPage(twitter, page, ++currentTry);
+                    tweets = getPage(twitter, page, ++currentTry); //Recurse (ie try getting the page again)
                 }
                 else {
                     System.out.println("Unexpected error status code: " + e.getStatusCode());

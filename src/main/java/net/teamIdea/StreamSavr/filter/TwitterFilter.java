@@ -19,6 +19,7 @@ import java.io.IOException;
 import static java.lang.System.getProperty;
 import static net.teamIdea.StreamSavr.TwitterUtils.*;
 
+/* Description: Checks to make sure the user is logged in. If not, then redirect to the auth page. */
 public class TwitterFilter implements Filter {
     public static final String TOKEN_PROPERTY = "token";
     public static final String TOKEN_SECRET_PROPERTY = "tokenSecret";

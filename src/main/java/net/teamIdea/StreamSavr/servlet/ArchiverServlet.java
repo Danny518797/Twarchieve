@@ -4,8 +4,6 @@ import net.teamIdea.StreamSavr.CreateCSV;
 import net.teamIdea.StreamSavr.tweetGetter;
 import twitter4j.Status;
 import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -25,6 +23,10 @@ import static net.teamIdea.StreamSavr.TwitterUtils.*;
  * To change this template use File | Settings | File Templates.
  */
  
+/*Description: This servlet does two things depending on if the URL parameter 'c' is set. If 'c' is not set, then the user's
+ *              tweets are downloaded and stored to the session. If 'c' is set then those tweets are pulled out of the
+ *              session and turned into a CSV and sent to the browser.
+ */
 public class ArchiverServlet extends HttpServlet {
 
     private tweetGetter tweetGet = null;
@@ -32,7 +34,7 @@ public class ArchiverServlet extends HttpServlet {
 
     /* Setters for testing purposes
     *  CSV and tweetget should both be unset unless the function is being tested.
-    * */
+    */
     public void setTweetGet(tweetGetter tweetGet) { this.tweetGet = tweetGet; }
     public void setCSV( CreateCSV csv) { this.csv = csv; }
 
