@@ -23,19 +23,19 @@ import static net.teamIdea.StreamSavr.TwitterUtils.setTwitter;
  * To change this template use File | Settings | File Templates.
  */
 public class ProgressServlet extends HttpServlet {
-
+    //Define the variables that we will use
     private JSONObject progressJSON = null;
     private Twitter twitter = null;
-
+    //Make some setter funtions that the test will use
     public void setJSON(JSONObject json) {this.progressJSON = json;}
     public void setTwitter(Twitter twit) {this.twitter = twit;}
-
+    //The doGet function
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        //If twitter was not already set then set it to the current user's twitter
         if(twitter == null){
             twitter = TwitterUtils.getTwitter(request);
         }
-
+        //If the JSON object was not already set then create a new one
         if(progressJSON == null){
                     progressJSON = new JSONObject();
         }
@@ -45,7 +45,9 @@ public class ProgressServlet extends HttpServlet {
         try {
             progressJSON.put("currentProgess", TwitterUtils.getTweetsDownloaded(request));
             progressJSON.put("totalTweets", twitter.verifyCredentials().getStatusesCount());
-        } catch (TwitterException e) {
+        }
+        //Catch the two exceptions that can be thrown and print the error if they are thrown
+        catch (TwitterException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.

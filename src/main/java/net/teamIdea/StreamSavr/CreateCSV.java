@@ -17,97 +17,53 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class CreateCSV {
+    //Define some pulic variables that we will use
     private List<Status> source;
-    private String sFileName;
     private Status tweet;
-    private Writer output;
-    private File file;
     byte[] csvBytes;
 
-
-    public String getFilename()
-    {
-        if (file.isFile())
-            return file.getName();
-        else
-            return null;
-    }
-
-    public File getFile()
-    {
-        if (file.isFile())
-            return file;
-        else
-            return null;
-    }
-
-    public String getLocation()
-    {
-        if (file.isFile())
-            return file.getPath();
-        else
-            return null;
-    }
-
-    public boolean deleteFile()
-    {
-        return file.delete();
-    }
-
+    //Here is a function that maybe useful
     public byte[] getCSVBytes() {
         return csvBytes;
     }
 
+    //This creates the CSV file from a list of tweet objects
     public byte[] createCSV(List data)
     {
+        //Define the variable that I will use
         String csvInMemory = new String();
         source = data;
-        sFileName = source.get(0).getUser().getScreenName();
         String intermediate;
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
 
-        try
-        {
-            file = File.createTempFile((sFileName + ".csv"), ".tmp");
-            output = new BufferedWriter(new FileWriter(file));
-            output.write("Date, Tweet, \n");
             csvInMemory += "Date, Tweet, \n";
-            //output.write(',');
-            //output.write("Tweet");
-            //output.write('\n');
 
-            for(int i=0; i < source.size(); i++)
-            {
-                tweet = source.get(i);
-                intermediate = df.format(tweet.getCreatedAt());
-
-                csvInMemory += addQuotes(intermediate);
-                output.write(addQuotes(intermediate));
-
-                csvInMemory += ',';
-                output.write(',');
-
-                intermediate = tweet.getText();
-
-                csvInMemory += modifyStringForCSV(intermediate);
-                output.write(modifyStringForCSV(intermediate));
-
-                csvInMemory += '\n';
-                output.write('\n');
-            }
-            output.close();
-        }
-        catch (IOException e){
-
+        //Run through all the tweets and add them to the CSV file
+        for(int i=0; i < source.size(); i++)
+        {
+            //Get the current tweet object
+            tweet = source.get(i);
+            //Format the date of the tweet
+            intermediate = df.format(tweet.getCreatedAt());
+            //Add the date to the CSV but put it in quotes
+            csvInMemory += addQuotes(intermediate);
+            //Add a comma to denote the next column
+            csvInMemory += ',';
+            //Now get the text from the tweet
+            intermediate = tweet.getText();
+            //Add the text to the csv after it has been properly formated
+            csvInMemory += modifyStringForCSV(intermediate);
+            //End the current line in the csv file
+            csvInMemory += '\n';
         }
 
+        //Turn the string into a byte array
         this.csvBytes = csvInMemory.getBytes();
+        //Return the byte array
         return this.csvBytes;
-
-        //return true;
-
     }
 
+    //This function modifies the text from the tweets so that it is CSV compatible
     private String modifyStringForCSV(String text)
     {
         String modified = new String(text);
@@ -115,11 +71,11 @@ public class CreateCSV {
         return "\"" + modified + "\"";
     }
 
+    //Just a function that adds quotes to text
     private String addQuotes(String text)
     {
         return "\"" + text + "\"";
     }
-
 
     
 }
