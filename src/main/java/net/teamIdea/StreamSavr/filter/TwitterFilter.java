@@ -24,6 +24,10 @@ public class TwitterFilter implements Filter {
     public static final String TOKEN_SECRET_PROPERTY = "tokenSecret";
     public static final String AUTH_URI = "auth";
 
+    private Twitter twitter = null;
+
+    public void setTwitterLocal(Twitter twitter){ this.twitter = twitter; }
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
@@ -42,7 +46,9 @@ public class TwitterFilter implements Filter {
         if (accessToken == null) {
             accessToken = getSystemPropertyBasedAccessToken();
         }
-        Twitter twitter = newTwitter(accessToken);
+        
+        if( twitter == null)
+            twitter = newTwitter(accessToken);
 
         try {
             User twitterUser = twitter.verifyCredentials();
