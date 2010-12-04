@@ -69,7 +69,7 @@ public class tweetGetter {
                     tweets = getPage(twitter, page, ++currentTry);
                 }
                 else {
-                    System.out.println("Unexpected error code: " + e.getExceptionCode());
+                    System.out.println("Unexpected error status code: " + e.getStatusCode());
                     e.printStackTrace();
                 }
             }
