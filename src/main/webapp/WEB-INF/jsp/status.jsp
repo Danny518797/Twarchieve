@@ -16,7 +16,7 @@
                         isDone = true;
                         document.getElementById('bar').style.width = "100%";
                         document.getElementById('process').innerHTML = "100%";
-                        window.location = '<c:url value="/archiver" />';
+                        setTimeout(window.location = '<c:url value="/archiver" />',100);
                     }});
                     function update(){
 
@@ -30,7 +30,6 @@
                                 document.getElementById('process').innerHTML = percent.toString() + "%";
                             },
                             failure: function(o) {
-                                if(!isDone) alert("failure");
                             }
 
                         };
