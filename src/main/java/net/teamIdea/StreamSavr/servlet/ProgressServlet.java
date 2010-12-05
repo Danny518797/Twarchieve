@@ -8,12 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import net.teamIdea.StreamSavr.tweetGetter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import twitter4j.*;
-
-import static net.teamIdea.StreamSavr.TwitterUtils.setTwitter;
 
 /**
  * Created by IntelliJ IDEA.

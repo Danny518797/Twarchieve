@@ -18,7 +18,7 @@ import static net.teamIdea.StreamSavr.TwitterUtils.setTweetsDownloaded;
  */
 
 /* Description; this class contains the functions needed to download all a user's tweets from twitter via the twit API.*/
-public class tweetGetter {
+public class TweetGetter {
 
     public static final int MAX_TRIES = 4; //Max number of times we hit twitter before giving up.
 
@@ -34,8 +34,8 @@ public class tweetGetter {
 
         int currentPage = 0; //Start with the first page.
         //get a maximum of 17 pages. Twitter only stores 3,200 tweets so this should be more than enough.
-        while(currentPage < 17) {
-            //Gets a single page of tweets.
+        while(currentPage < 16) {
+            //Gets a single page of tweets, and increment the currentPage
             tweets = getPage(twitter, new Paging(++currentPage, 200), 0);
 
             //If twitter retuns no tweets, you're done.
@@ -47,7 +47,6 @@ public class tweetGetter {
             downloadedTweets = (Integer) getTweetsDownloaded(request);
             downloadedTweets += tweets.size();
             setTweetsDownloaded(request, downloadedTweets);
-
         }
 
         return toArchive;

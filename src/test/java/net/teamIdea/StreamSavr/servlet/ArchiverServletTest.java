@@ -2,12 +2,11 @@ package net.teamIdea.StreamSavr.servlet;
 
 
 import net.teamIdea.StreamSavr.CreateCSV;
-import net.teamIdea.StreamSavr.tweetGetter;
+import net.teamIdea.StreamSavr.TweetGetter;
 import org.testng.annotations.Test;
 import twitter4j.Status;
 import twitter4j.Twitter;
 
-import static net.teamIdea.StreamSavr.TwitterUtils.getTwitter;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,7 +15,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +43,7 @@ public class ArchiverServletTest {
         HttpServletResponse response = mock(HttpServletResponse.class);
         when(response.getOutputStream()).thenReturn(out);
 
-        tweetGetter tweetGet = mock(tweetGetter.class);
+        TweetGetter tweetGet = mock(TweetGetter.class);
         List<Status> test = mock(ArrayList.class);
         when(tweetGet.getAllTweets(twitter, request)).thenReturn(test);
 
@@ -108,7 +106,7 @@ public class ArchiverServletTest {
         HttpServletResponse response = mock(HttpServletResponse.class);
         when(response.getOutputStream()).thenReturn(out);
 
-        tweetGetter tweetGet = mock(tweetGetter.class);
+        TweetGetter tweetGet = mock(TweetGetter.class);
         List<Status> test = mock(ArrayList.class);
         IllegalStateException e = new IllegalStateException();
         when(tweetGet.getAllTweets(twitter, request)).thenThrow(e);

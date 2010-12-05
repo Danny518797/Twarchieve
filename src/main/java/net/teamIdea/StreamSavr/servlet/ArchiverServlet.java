@@ -1,7 +1,7 @@
 package net.teamIdea.StreamSavr.servlet;
 
 import net.teamIdea.StreamSavr.CreateCSV;
-import net.teamIdea.StreamSavr.tweetGetter;
+import net.teamIdea.StreamSavr.TweetGetter;
 import twitter4j.Status;
 import twitter4j.Twitter;
 
@@ -29,13 +29,13 @@ import static net.teamIdea.StreamSavr.TwitterUtils.*;
  */
 public class ArchiverServlet extends HttpServlet {
 
-    private tweetGetter tweetGet = null;
+    private TweetGetter tweetGet = null;
     private CreateCSV csv = null;
 
     /* Setters for testing purposes
     *  CSV and tweetget should both be unset unless the function is being tested.
     */
-    public void setTweetGet(tweetGetter tweetGet) { this.tweetGet = tweetGet; }
+    public void setTweetGet(TweetGetter tweetGet) { this.tweetGet = tweetGet; }
     public void setCSV( CreateCSV csv) { this.csv = csv; }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -53,7 +53,7 @@ public class ArchiverServlet extends HttpServlet {
             try {
                 //For testing purposes.
                 if(tweetGet == null)
-                    tweetGet = new tweetGetter();
+                    tweetGet = new TweetGetter();
 
                 //Call tweetGet which passes back a list full of all the user's tweets.
                 tweets = tweetGet.getAllTweets(twitter, request);
