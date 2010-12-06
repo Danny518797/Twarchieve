@@ -4,8 +4,10 @@ package net.teamIdea.StreamSavr.servlet;
 import net.teamIdea.StreamSavr.CreateCSV;
 import net.teamIdea.StreamSavr.TweetGetter;
 import org.testng.annotations.Test;
+import twitter4j.RateLimitStatus;
 import twitter4j.Status;
 import twitter4j.Twitter;
+import twitter4j.User;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -29,14 +31,20 @@ import java.util.List;
 @Test
 public class ArchiverServletTest {
 
+    @Test
     public void doGetShouldArchiveTweetsAndSendOk() throws Exception {
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getParameter("c")).thenReturn("");
 
         HttpSession session = mock(HttpSession.class);
         Twitter twitter = mock(Twitter.class);
+        User user = mock(User.class);
+        RateLimitStatus rateLimit = mock(RateLimitStatus.class);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute("twitter")).thenReturn(twitter);
+        when(twitter.verifyCredentials()).thenReturn(user);
+        when(user.getRateLimitStatus()).thenReturn(rateLimit);
+        when(rateLimit.getRemainingHits()).thenReturn(1);
         
 
         ServletOutputStream out = mock(ServletOutputStream.class);
@@ -98,8 +106,13 @@ public class ArchiverServletTest {
 
         HttpSession session = mock(HttpSession.class);
         Twitter twitter = mock(Twitter.class);
+        User user = mock(User.class);
+        RateLimitStatus rateLimit = mock(RateLimitStatus.class);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute("twitter")).thenReturn(twitter);
+        when(twitter.verifyCredentials()).thenReturn(user);
+        when(user.getRateLimitStatus()).thenReturn(rateLimit);
+        when(rateLimit.getRemainingHits()).thenReturn(1);
 
 
         ServletOutputStream out = mock(ServletOutputStream.class);

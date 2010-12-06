@@ -56,7 +56,8 @@ public class ArchiverServlet extends HttpServlet {
                 if(tweetGet == null)
                     tweetGet = new TweetGetter();
 
-                request.getSession().setAttribute("totalTweets", twitter.verifyCredentials().getStatusesCount());
+                if(twitter.verifyCredentials().getRateLimitStatus().getRemainingHits() > 0)
+                    request.getSession().setAttribute("totalTweets", twitter.verifyCredentials().getStatusesCount());
                 //Set error to 0 (no error). tweetGet will set a different code if something goes wrong.
                 setTwitterError(request, 0);
                 //Call tweetGet which passes back a list full of all the user's tweets.
