@@ -79,16 +79,17 @@ public class ArchiverServlet extends HttpServlet {
             List<Status> tweets = (List<Status>) request.getSession().getAttribute("TWEETS");
 
             //Pass tweets to createCSV which passes back a CSV file in byte array form.
-            byte[] csvToSend = csv.createCSV(tweets);
+            csv.createCSV(tweets);
+            byte[] csvZipToSend = csv.zipCSV();
 
             //Set the response header so the browser will pop up a download dialog when it recieves the CSV.
             response.setHeader("Content-disposition",
                       "attachment; filename=" +
-                      "tweets.csv" );
-            response.setContentType("application/csv");
+                      "tweets.zip" );
+            response.setContentType("application/zip");
             ServletOutputStream out = response.getOutputStream();
             //send the csv file.
-            out.write(csvToSend);
+            out.write(csvZipToSend);
             out.flush();
             out.close();
         }

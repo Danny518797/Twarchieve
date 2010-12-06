@@ -7,6 +7,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.lang.StringBuffer;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 
 /**
@@ -62,6 +64,19 @@ public class CreateCSV {
         //Return the byte array
         return this.csvBytes;
     }
+
+    public byte[] zipCSV() throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ZipOutputStream zos = new ZipOutputStream(baos);
+        ZipEntry entry = new ZipEntry("tweets.csv");
+        entry.setSize(csvBytes.length);
+        zos.putNextEntry(entry);
+        zos.write(csvBytes);
+        zos.closeEntry();
+        zos.close();
+        return baos.toByteArray();
+    }
+
 
     //This function modifies the text from the tweets so that it is CSV compatible
     private String modifyStringForCSV(String text)

@@ -85,8 +85,8 @@ public class ArchiverServletTest {
         verify(csv).createCSV(tweetList);
         verify(response).setHeader("Content-disposition",
                       "attachment; filename=" +
-                      "tweets.csv" );
-        verify(response).setContentType("application/csv");
+                      "tweets.zip" );
+        verify(response).setContentType("application/zip");
         verify(out).write(csvToSend);
         verify(out).flush();
         verify(out).close();
