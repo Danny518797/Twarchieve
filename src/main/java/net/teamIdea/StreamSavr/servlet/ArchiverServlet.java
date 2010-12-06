@@ -4,6 +4,7 @@ import net.teamIdea.StreamSavr.CreateCSV;
 import net.teamIdea.StreamSavr.TweetGetter;
 import twitter4j.Status;
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -55,6 +56,7 @@ public class ArchiverServlet extends HttpServlet {
                 if(tweetGet == null)
                     tweetGet = new TweetGetter();
 
+                request.getSession().setAttribute("totalTweets", twitter.verifyCredentials().getStatusesCount());
                 //Set error to 0 (no error). tweetGet will set a different code if something goes wrong.
                 setTwitterError(request, 0);
                 //Call tweetGet which passes back a list full of all the user's tweets.
@@ -69,6 +71,8 @@ public class ArchiverServlet extends HttpServlet {
             } catch ( IllegalStateException e) {
                 //If an exception is thrown, the user probably isn't logged in. send them back to the auth screen
                 response.sendRedirect("/auth");
+            } catch (TwitterException e) {
+                e.printStackTrace();
             }
         } else {
             //for testing purposes
@@ -88,10 +92,13 @@ public class ArchiverServlet extends HttpServlet {
                       "tweets.zip" );
             response.setContentType("application/zip");
             ServletOutputStream out = response.getOutputStream();
-            //send the csv file.
+            //send the zip file.
             out.write(csvZipToSend);
             out.flush();
             out.close();
+
+            //Remove the twitter archive after it's been sent to the browser.
+            request.getSession().removeAttribute("TWEETS");
         }
     }
 }
