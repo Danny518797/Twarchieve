@@ -22,8 +22,7 @@ public class TwitterUtils {
     public static final String USER_ATTRIBUTE = "user";
     public static final String AUTH_URI = "auth";
     public static final String DOWNLOADED_TWEETS = "downloaded";
-
-
+    public static final String TWITTER_ERROR = "twitError";
 
     //Desc: Get a new twitter object based on the consumer key and secret.
     public static Twitter newTwitter() {
@@ -65,8 +64,13 @@ public class TwitterUtils {
         return (Integer) request.getSession().getAttribute(DOWNLOADED_TWEETS);
     }
 
-    //Desc; Set the user on the session.
+    //Desc: Set the user on the session.
     public static void setUser(HttpServletRequest request, User user) {
         request.getSession().setAttribute(USER_ATTRIBUTE, user);
+    }
+
+    //Desc: Set if twitter throws us an error that we can't recover from.
+    public static void setTwitterError(HttpServletRequest request, int error) {
+        request.getSession().setAttribute(TWITTER_ERROR, error);
     }
 }

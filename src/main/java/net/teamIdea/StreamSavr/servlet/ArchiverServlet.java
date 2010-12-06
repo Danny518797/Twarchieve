@@ -55,6 +55,8 @@ public class ArchiverServlet extends HttpServlet {
                 if(tweetGet == null)
                     tweetGet = new TweetGetter();
 
+                //Set error to 0 (no error). tweetGet will set a different code if something goes wrong.
+                setTwitterError(request, 0);
                 //Call tweetGet which passes back a list full of all the user's tweets.
                 tweets = tweetGet.getAllTweets(twitter, request);
                 //Store the list to the session. will be pulled out of the session and turned into a CSV later.

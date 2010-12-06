@@ -8,6 +8,7 @@ import java.util.List;
 
 import static net.teamIdea.StreamSavr.TwitterUtils.getTweetsDownloaded;
 import static net.teamIdea.StreamSavr.TwitterUtils.setTweetsDownloaded;
+import static net.teamIdea.StreamSavr.TwitterUtils.setTwitterError;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,6 +22,7 @@ import static net.teamIdea.StreamSavr.TwitterUtils.setTweetsDownloaded;
 public class TweetGetter {
 
     public static final int MAX_TRIES = 4; //Max number of times we hit twitter before giving up.
+    private HttpServletRequest request = null;
 
     /* Description: gets all of the users tweets and returns them as a tweet list
      * Arguments: twitter, the twitter object of the current user.
@@ -31,6 +33,8 @@ public class TweetGetter {
         ResponseList<Status> tweets; //Set of 0-200 tweets returned by Twitter.
         Integer downloadedTweets=0; //Start with 0 tweets downloaded
         setTweetsDownloaded(request, downloadedTweets);
+
+        this.request = request;
 
         int currentPage = 0; //Start with the first page.
         //get a maximum of 17 pages. Twitter only stores 3,200 tweets so this should be more than enough.
@@ -57,25 +61,28 @@ public class TweetGetter {
      */
     private ResponseList<Status> getPage(Twitter twitter, Paging page, int currentTry) throws IllegalStateException {
         ResponseList<Status> tweets = null;
-        if(currentTry < MAX_TRIES) {
-            try {
-                tweets = twitter.getUserTimeline(page);
-            }
-            catch(TwitterException e) {
-                //If we get an error 502, try hitting twitter again (ie recurse).
-                System.out.println("Exception:" + e.getStatusCode());
-                if ( shouldRetry(e.getStatusCode()) && hitsRemain(twitter) ) {
-                    System.out.println("Error. Trying again.");
-                    tweets = getPage(twitter, page, ++currentTry); //Recurse (ie try getting the page again)
+        if(hitsRemain(twitter)) {
+            if(currentTry < MAX_TRIES) {
+                try {
+                    tweets = twitter.getUserTimeline(page);
                 }
-                else {
-                    System.out.println("Unexpected error status code: " + e.getStatusCode());
-                    e.printStackTrace();
+                catch(TwitterException e) {
+                    //If we get an error 502, try hitting twitter again (ie recurse).
+                    setTwitterError(request, e.getStatusCode());
+                    if ( shouldRetry(e.getStatusCode()) && hitsRemain(twitter) ) {
+                        System.out.println("Twitter Error: " + e.getStatusCode() + ". Trying again.");
+                        tweets = getPage(twitter, page, ++currentTry); //Recurse (ie try getting the page again)
+                    }
+                    else
+                    {
+                        System.out.println("Unexpected error status code: " + e.getStatusCode());
+                        return tweets;
+                    }
                 }
             }
-        }
-        else {
-            System.out.println("Hit Max Tries: " + MAX_TRIES);
+            else {
+                System.out.println("Tried " + MAX_TRIES + " times. Giving up.");
+            }
         }
 
         return tweets;
@@ -102,7 +109,8 @@ public class TweetGetter {
         } catch (TwitterException e) {
             e.printStackTrace();
         }
-
+        
+        setTwitterError(request, -1);
         return false;
     }
 }
