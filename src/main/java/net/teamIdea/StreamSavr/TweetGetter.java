@@ -23,13 +23,19 @@ public class TweetGetter {
 
     public static final int MAX_TRIES = 4; //Max number of times we hit twitter before giving up.
     private HttpServletRequest request = null;
+    private List<Status> toArchive = null;
+
+    //For testing purposes. 
+    public void setToArchive(List<Status> toArchive) { this.toArchive = toArchive;}
 
     /* Description: gets all of the users tweets and returns them as a tweet list
      * Arguments: twitter, the twitter object of the current user.
      * Return: A List<Status> containing all of the user's tweets (up to 3200).
      */
     public List<Status> getAllTweets(Twitter twitter, HttpServletRequest request) throws IllegalStateException {
-        List<Status> toArchive = new ArrayList<Status>(); //Where all the tweets are copied too.
+        if(toArchive == null)
+            toArchive = new ArrayList<Status>(); //Where all the tweets are copied too.
+
         ResponseList<Status> tweets; //Set of 0-200 tweets returned by Twitter.
         Integer downloadedTweets=0; //Start with 0 tweets downloaded
         setTweetsDownloaded(request, downloadedTweets);
@@ -69,7 +75,7 @@ public class TweetGetter {
                 catch(TwitterException e) {
                     //If we get an error 502, try hitting twitter again (ie recurse).
                     setTwitterError(request, e.getStatusCode());
-                    if ( shouldRetry(e.getStatusCode()) && hitsRemain(twitter) ) {
+                    if ( shouldRetry(e.getStatusCode())) {
                         System.out.println("Twitter Error: " + e.getStatusCode() + ". Trying again.");
                         tweets = getPage(twitter, page, ++currentTry); //Recurse (ie try getting the page again)
                     }
