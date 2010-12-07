@@ -8,12 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import net.teamIdea.StreamSavr.tweetGetter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import twitter4j.*;
-
-import static net.teamIdea.StreamSavr.TwitterUtils.setTwitter;
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,12 +41,9 @@ public class ProgressServlet extends HttpServlet {
         //Then add the total number of tweets downloaded to the JSON object
         try {
             progressJSON.put("currentProgess", TwitterUtils.getTweetsDownloaded(request));
-            progressJSON.put("totalTweets", twitter.verifyCredentials().getStatusesCount());
+            progressJSON.put("totalTweets", request.getSession().getAttribute("totalTweets"));
         }
-        //Catch the two exceptions that can be thrown and print the error if they are thrown
-        catch (TwitterException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        catch (JSONException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 

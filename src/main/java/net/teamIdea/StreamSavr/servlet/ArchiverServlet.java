@@ -1,9 +1,10 @@
 package net.teamIdea.StreamSavr.servlet;
 
 import net.teamIdea.StreamSavr.CreateCSV;
-import net.teamIdea.StreamSavr.tweetGetter;
+import net.teamIdea.StreamSavr.TweetGetter;
 import twitter4j.Status;
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -29,13 +30,13 @@ import static net.teamIdea.StreamSavr.TwitterUtils.*;
  */
 public class ArchiverServlet extends HttpServlet {
 
-    private tweetGetter tweetGet = null;
+    private TweetGetter tweetGet = null;
     private CreateCSV csv = null;
 
     /* Setters for testing purposes
     *  CSV and tweetget should both be unset unless the function is being tested.
     */
-    public void setTweetGet(tweetGetter tweetGet) { this.tweetGet = tweetGet; }
+    public void setTweetGet(TweetGetter tweetGet) { this.tweetGet = tweetGet; }
     public void setCSV( CreateCSV csv) { this.csv = csv; }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -53,8 +54,12 @@ public class ArchiverServlet extends HttpServlet {
             try {
                 //For testing purposes.
                 if(tweetGet == null)
-                    tweetGet = new tweetGetter();
+                    tweetGet = new TweetGetter();
 
+                if(twitter.verifyCredentials().getRateLimitStatus().getRemainingHits() > 0)
+                    request.getSession().setAttribute("totalTweets", twitter.verifyCredentials().getStatusesCount());
+                //Set error to 0 (no error). tweetGet will set a different code if something goes wrong.
+                setTwitterError(request, 0);
                 //Call tweetGet which passes back a list full of all the user's tweets.
                 tweets = tweetGet.getAllTweets(twitter, request);
                 //Store the list to the session. will be pulled out of the session and turned into a CSV later.
@@ -67,6 +72,8 @@ public class ArchiverServlet extends HttpServlet {
             } catch ( IllegalStateException e) {
                 //If an exception is thrown, the user probably isn't logged in. send them back to the auth screen
                 response.sendRedirect("/auth");
+            } catch (TwitterException e) {
+                e.printStackTrace();
             }
         } else {
             //for testing purposes
@@ -77,18 +84,22 @@ public class ArchiverServlet extends HttpServlet {
             List<Status> tweets = (List<Status>) request.getSession().getAttribute("TWEETS");
 
             //Pass tweets to createCSV which passes back a CSV file in byte array form.
-            byte[] csvToSend = csv.createCSV(tweets);
+            csv.createCSV(tweets);
+            byte[] csvZipToSend = csv.zipCSV();
 
             //Set the response header so the browser will pop up a download dialog when it recieves the CSV.
             response.setHeader("Content-disposition",
                       "attachment; filename=" +
-                      "tweets.csv" );
-            response.setContentType("application/csv");
+                      "tweets.zip" );
+            response.setContentType("application/zip");
             ServletOutputStream out = response.getOutputStream();
-            //send the csv file.
-            out.write(csvToSend);
+            //send the zip file.
+            out.write(csvZipToSend);
             out.flush();
             out.close();
+
+            //Remove the twitter archive after it's been sent to the browser.
+            request.getSession().removeAttribute("TWEETS");
         }
     }
 }
