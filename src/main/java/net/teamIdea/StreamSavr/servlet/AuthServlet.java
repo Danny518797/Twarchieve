@@ -21,10 +21,18 @@ public class AuthServlet extends HttpServlet {
     public static final String AUTH_URL_ATTRIBUTE = "authUrl";           //Where the twit authURL is stored for the jsp.
     public static final String REQUEST_TOKEN_ATTRIBUTE = "requestToken";
 
+    private Twitter twitter = null;
+
+    //Setter: should only be called for testing purposes
+    public void setTwitterLocal( Twitter twitter ){ this.twitter = twitter; }
+
     /* Description: */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Twitter twitter = newTwitter();
+        //for testing purposes
+        if( twitter == null )
+            twitter = newTwitter();
+
         setTwitter(req, twitter); //Add the twitter object to the session.
         try {
             //Set the callback URL (ie where twitter sends you after you've authorized this app) to /callback
