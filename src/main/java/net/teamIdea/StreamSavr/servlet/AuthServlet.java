@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static net.teamIdea.StreamSavr.TwitterUtils.getTwitter;
 import static net.teamIdea.StreamSavr.TwitterUtils.newTwitter;
 import static net.teamIdea.StreamSavr.TwitterUtils.setTwitter;
 
@@ -46,6 +47,9 @@ public class AuthServlet extends HttpServlet {
             req.getSession().setAttribute(REQUEST_TOKEN_ATTRIBUTE, requestToken);
             req.setAttribute(AUTH_URL_ATTRIBUTE, requestToken.getAuthorizationURL());
             req.getRequestDispatcher(AUTH_FORM_VIEW).forward(req, resp);
+
+            //Set twitter back to null for when this page is loaded again
+            twitter = null;
 
         } catch (TwitterException e) {
             throw new ServletException(e);
