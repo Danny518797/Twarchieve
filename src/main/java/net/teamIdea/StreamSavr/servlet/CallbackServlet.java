@@ -30,13 +30,13 @@ public class CallbackServlet extends HttpServlet {
     public static final String TOTAL_TWEETS = "totalTweets";
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //Get Twitter from the session
-        Twitter twitter = getTwitter(request);
-        //Get the required verification parameters from the session and request
-        RequestToken requestToken = (RequestToken) request.getSession().getAttribute("requestToken");
-        String verifier = request.getParameter("oauth_verifier");
-
+     
         try {
+             //Get Twitter from the session
+            Twitter twitter = getTwitter(request);
+            //Get the required verification parameters from the session and request
+            RequestToken requestToken = (RequestToken) request.getSession().getAttribute("requestToken");
+            String verifier = request.getParameter("oauth_verifier");
             //Get and set the access token
             AccessToken aToken = twitter.getOAuthAccessToken(requestToken, verifier);
             setAccessToken(request.getSession(), aToken);
@@ -50,7 +50,7 @@ public class CallbackServlet extends HttpServlet {
             request.setAttribute(TOTAL_TWEETS, twitter.verifyCredentials().getStatusesCount());
         }
         //Catch any exceptions thrown
-        catch (TwitterException e) {
+        catch (Exception e) {
             response.sendRedirect(AUTH_URI);
             //throw new ServletException(e);
         }
